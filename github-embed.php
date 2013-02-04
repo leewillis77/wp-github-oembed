@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: Github oEmbed
+Plugin Name: Github Embed
 Plugin URI: http://www.leewillis.co.uk/wordpress-plugins
 Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
 Version: 1.0
@@ -31,7 +31,7 @@ Author URI: http://www.leewillis.co.uk/
  * **********************************************************************
  */
 
-class github_oembed {
+class github_embed {
 
 
 
@@ -259,4 +259,4 @@ class github_oembed {
 
 }
 
-$github_oembed = new github_oembed();
+$github_embed = new github_embed();
