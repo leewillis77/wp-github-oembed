@@ -4,7 +4,7 @@ Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&
 Tags: github, embed, oembed
 Requires at least: 3.5
 Tested up to: 3.5.1
-Stable tag: 1.0
+Stable tag: 1.1
 
 == Description ==
 
@@ -36,6 +36,9 @@ Not yet, we're hoping to add templating - all contributions welcome!
 2. GitHub user profile
 
 == Changelog ==
+
+= 1.1 =
+Default CSS and more styling
 
 = 1.0 =
 First release
