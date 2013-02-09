@@ -197,7 +197,7 @@ class github_embed {
 		// @TODO This should all be templated
 		$response->html = '<div class="github-embed">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
-		$response->html .= esc_html($repo->html_url)."<br/>";
+		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
 		$response->html .= esc_html($repo->forks_count)." forks.<br/>";
 		$response->html .= esc_html($repo->open_issues_count)." open issues.<br/>";
 
