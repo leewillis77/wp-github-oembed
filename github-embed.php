@@ -42,9 +42,24 @@ class github_embed {
 
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
-
+		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
+		
 		// @TODO i18n
 
+	}
+
+
+
+	/**
+	 * Enqueue the frontend CSS
+	 * @return void
+	 */
+	function enqueue_styles() {
+
+		error_log ( __FUNCTION__ );
+		wp_register_style ( 'github-embed', plugins_url(basename(dirname(__FILE__)).'/css/github-embed.css' ) );
+        wp_enqueue_style ( 'github-embed' );
+	
 	}
 
 
@@ -181,7 +196,8 @@ class github_embed {
 		$response->title = $repo->description;
 
 		// @TODO This should all be templated
-		$response->html = '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
+		$response->html = '<div class="github-embed">';
+		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= esc_html($repo->html_url)."<br/>";
 		$response->html .= esc_html($repo->forks_count)." forks.<br/>";
 		$response->html .= esc_html($repo->open_issues_count)." open issues.<br/>";
@@ -210,6 +226,7 @@ class github_embed {
 
 		}
 		$response->html .= '</p>';
+		$response->html .= '</div>';
 
 		header ( 'Content-Type: application/json' );
 		echo json_encode ( $response );
