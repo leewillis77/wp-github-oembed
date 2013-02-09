@@ -19,6 +19,8 @@ Coming soon:
 
 The plugin provides very basic styling, but adds classes so you can style as you see fit. If anyone has some ideas for a better default stylesheet - pull requests welcome!
 
+The main development is all going on on [GitHub](https://github.com/leewillis77/wp-github-oembed).
+
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/` directory
@@ -28,7 +30,7 @@ The plugin provides very basic styling, but adds classes so you can style as you
 == Frequently Asked Questions ==
 
 = Can I change the layout? =
-Not yet, we're hoping to add templating - all contributions welcome!
+Not yet, we're hoping to add templating - [all contributions welcome](https://github.com/leewillis77/wp-github-oembed)!
 
 == Screenshots ==
 
