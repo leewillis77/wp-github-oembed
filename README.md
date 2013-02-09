@@ -28,5 +28,7 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 ## Changelog
 
+- 1.1
+    - Default CSS and more styling
 - 1.0
 	- First release
