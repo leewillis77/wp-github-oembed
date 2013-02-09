@@ -1,6 +1,16 @@
 # Github Embed
 
-Plugin that allows you to embed details about a github user, or repo just by pasting in the repo URL as you would any other embed source. 
+Plugin that allows you to embed details from github just by pasting in the URL as you would any other embed source. Currently supports:
+
+* GitHub repositories
+* GitHub user profiles
+
+Coming soon:
+
+* Gists...
+
+The plugin provides very basic styling, but adds classes so you can style as you see fit. If anyone has some ideas for a better default stylesheet - pull requests welcome!
+lugin that allows you to embed details about a github user, or repo just by pasting in the repo URL as you would any other embed source. 
 
 ## Installation
 
