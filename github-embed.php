@@ -195,7 +195,7 @@ class github_embed {
 		$response->title = $repo->description;
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed">';
+		$response->html = '<div class="github-embed github-embed-repository">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
 		$response->html .= esc_html($repo->forks_count)." forks.<br/>";
@@ -263,9 +263,11 @@ class github_embed {
 		$response->title = $owner_info->name;
 
 		// @TODO This should all be templated
-		$response->html = '<p><a href="https://github.com/'.esc_attr($owner).'" target="_blank"><strong>'.esc_html($owner)."</strong></a><br/>";
+		$response->html = '<div class="github-embed github-embed-user">';
+		$response->html .= '<p><a href="https://github.com/'.esc_attr($owner).'" target="_blank"><strong>'.esc_html($owner)."</strong></a><br/>";
 		$response->html .= esc_html($owner_info->public_repos).' repositories, ';
 		$response->html .= esc_html($owner_info->followers).' followers.</p>';
+		$response->html .= '</div>';
 
 		header ( 'Content-Type: application/json' );
 		echo json_encode ( $response );
