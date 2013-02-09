@@ -32,6 +32,8 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 == Screenshots ==
 
+1. GitHub Repository
+2. GitHub user profile
 
 == Changelog ==
 
