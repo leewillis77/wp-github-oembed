@@ -1,3 +1,13 @@
 .github-embed { 
 	padding: 0.5em 2em 0.5em 4em;
+	background-color: #fdfdfd;
+	width: 80%;
+	margin: auto;
+	margin-bottom: 1em;
+	background-image: url('https://github.com/github/media/raw/master/octocats/blacktocat-32.png');
+	background-repeat: no-repeat;
+	background-position: 1em 1em;
+	-webkit-box-shadow: 2px 2px 2px #ddd;
+	-moz-box-shadow: 2px 2px 2px #ddd;
+	box-shadow: 2px 2px 2px #ddd;
 }
