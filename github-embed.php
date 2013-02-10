@@ -35,10 +35,17 @@ class github_embed {
 
 
 
+	private $api;
+
+
+
 	/**
 	 * Constructor. Registers hooks and filters
+	 * @param class $api An instance of the github_api classs
 	 */
-	public function __construct() {
+	public function __construct ( $api ) {
+
+		$this->api = $api;
 
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
@@ -277,4 +284,7 @@ class github_embed {
 
 }
 
-$github_embed = new github_embed();
+require_once ( 'github-api.php' );
+
+$github_api = new github_api();
+$github_embed = new github_embed ( $github_api );
