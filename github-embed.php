@@ -31,6 +31,12 @@ Author URI: http://www.leewillis.co.uk/
  * **********************************************************************
  */
 
+/**
+ * This class handles being the oEmbed provider in terms of registering the URLs that
+ * we can embed, and handling the actual oEmbed calls. It relies on the github_api 
+ * class to retrieve the information from the GitHub API.
+ * @uses class github_api
+ */
 class github_embed {
 
 
@@ -148,10 +154,25 @@ class github_embed {
 			die ( 'Octocat is lost, and afraid' );
 		}
 
-		if ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/?$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
+		// Issues / Milestones
+		if ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/issues.*$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
+
+			if ( preg_match ( '#issues.?milestone=([0-9]*)#i', $url, $milestones ) ) {
+				$milestone = $milestones[1];
+			} else {
+				$milestone = null;
+			}
+
+			if ( $milestone ) {
+				$this->oembed_github_repo_milestone_summary ( $matches[1], $matches[2], $milestone );
+			}
+
+		// Repository
+		} elseif ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/?$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
 
 			$this->oembed_github_repo ( $matches[1], $matches[2] );
 
+		// User
 		} elseif ( preg_match ( '#https?://github.com/([^/]*)/?$#i', $url, $matches ) ) {
 
 			$this->oembed_github_author ( $matches[1] );
@@ -161,6 +182,50 @@ class github_embed {
 	}
 
 
+	/**
+	 * Retrieve the summary information for a repo's milestone, and
+	 * output it as an oembed response
+	 */
+	private function oembed_github_repo_milestone_summary ( $owner, $repository, $milestone ) {
+
+		$repo = $this->api->get_repo ( $owner, $repository );
+		$summary = $this->api->get_repo_milestone_summary ( $owner, $repository, $milestone );
+
+		$response = new stdClass();
+		$response->type = 'rich';
+		$response->width = '10';
+		$response->height = '10';
+		$response->version = '1.0';
+		$response->title = $repo->description;
+
+		// @TODO This should all be templated
+		$response->html = '<div class="github-embed github-embed-milestone-summary">';
+		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
+		
+		$response->html .= '<span class="github-heading">Milestone: </span>';
+		$response->html .= '<span class="github-milestone-title">'.esc_html($summary->title)."</span><br>";
+		
+		$response->html .= '<span class="github-heading">Issues: </span>';
+		$response->html .= '<span class="github-milestone-issues">';
+		$response->html .= esc_html($summary->open_issues)." open, ";
+		$response->html .= esc_html($summary->closed_issues)." closed.</span><br>";
+		
+		if ( ! empty ( $summary->due_on ) ) {
+			$response->html .= '<span class="github-heading">Due: </span>';
+			$due_date = date_format ( date_create ( $summary->due_on ), 'jS F Y' );
+			$response->html .= '<span class="github-milestone-due-date">'.esc_html($due_date).'</span><br>';
+		}
+		
+		$response->html .= '<p class="github-milestone-description">'.nl2br(esc_html($summary->description))."</p><br>";
+		$response->html .= '</div>';
+
+		header ( 'Content-Type: application/json' );
+		echo json_encode ( $response );
+		die();
+
+	} 
+
+
 
 	/**
 	 * Retrieve the information from github for a repo, and
@@ -168,31 +233,8 @@ class github_embed {
 	 */
 	private function oembed_github_repo ( $owner, $repository ) {
 
-		$repository = trim ( $repository, '/' );
-
-		$results = wp_remote_get( "https://api.github.com/repos/$owner/$repository", $args = array (
-		              'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
-
-		$repo = json_decode ( $results['body'] );
-
-		$results = wp_remote_get( "https://api.github.com/repos/$owner/$repository/commits", $args = array (
-		              'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
-
-		$commits = json_decode ( $results['body'] );
+		$repo = $this->api->get_repo ( $owner, $repository );
+		$commits =$this->api->get_repo_commits ( $owner, $repository );
 
 		$response = new stdClass();
 		$response->type = 'rich';
@@ -248,19 +290,7 @@ class github_embed {
 	 */
 	private function oembed_github_author ( $owner ) {
 
-		$owner = trim ( $owner, '/' );
-
-		$results = wp_remote_get( "https://api.github.com/users/$owner", $args = array (
-		              'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
-
-		$owner_info = json_decode ( $results['body'] );
+		$owner_info = $this->api->get_user ( $owner );
 
 		$response = new stdClass();
 		$response->type = 'rich';
