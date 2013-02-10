@@ -3,19 +3,19 @@
 Plugin that allows you to embed details from github just by pasting in the URL as you would any other embed source. Currently supports:
 
 ### Repositories
-__https://github.com/leewillis77/wp-github-oembed__
+__https://github.com/leewillis77/wp-github-oembed__  
 ![Sample output for repository](https://raw.github.com/leewillis77/wp-github-oembed/master/screenshot-1.png)
 
 ### User profiles
-__https://github.com/leewillis77/__
+__https://github.com/leewillis77/__  
 ![Sample output for a user](https://raw.github.com/leewillis77/wp-github-oembed/master/screenshot-2.png)
 
 ### Milestone summaries
-__https://github.com/leewillis77/wp-github-oembed/issues?milestone=1&state=open__
+__https://github.com/leewillis77/wp-github-oembed/issues?milestone=1&state=open__  
 ![Sample output for a milestone](https://raw.github.com/leewillis77/wp-github-oembed/master/screenshot-3.png)
 
 ### Repository contributors
-__https://github.com/leewillis77/wp-github-oembed/graphs/contributors__
+__https://github.com/leewillis77/wp-github-oembed/graphs/contributors__  
 ![Sample output for a list of contributors](https://raw.github.com/leewillis77/wp-github-oembed/master/screenshot-4.png)
 
 Coming soon:
