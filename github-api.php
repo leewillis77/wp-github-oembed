@@ -1,9 +1,95 @@
 <?php 
 
+
+
+// 0 - none
+define ( 'GEDEBUG_NONE', 0 );
+
+// 1 - call logging only
+define ( 'GEDEBUG_CALL', 1 );
+
+// 2 - calls, and responses
+define ( 'GEDEBUG_RESP', 2 );
+
+// Selected debug level
+define ( 'GITHUB_API_LEVEL', GEDEBUG_NONE );
+
+
 /**
  * This class contains all the functions that actually retrieve information from the GitHub API
  */
 class github_api {
+
+
+	private $client_id = null;
+	private $client_secret = null;
+
+
+
+	/**
+	 * Allow the client ID / secret to be set, and used for subsequent calls
+	 */
+	function __construct() {
+
+		add_action ( 'plugins_loaded', array ( $this, 'set_credentials' ) );
+		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
+
+	}
+
+
+
+	/**
+	 * Extend the timeout since API calls can easily exceed 5 seconds
+	 * @param  int $seconds The current timeout setting
+	 * @return int          The revised timeout setting
+	 */
+	function http_request_timeout ( $seconds ) {
+		return 25;
+	}
+
+
+
+	/**
+	 * If you find yourself hitting rate limits, then you can register an application
+	 * with GitHub (http://developer.github.com/v3/oauth/) use the filters here to
+	 * provide the credentials.
+	 */
+	public function set_credentials () {
+
+		$this->client_id = apply_filters ( 'github-embed-client-id', $this->client_id );
+		$this->client_secret = apply_filters ( 'github-embed-client-secret', $this->client_id );
+
+	}
+
+
+
+	private function call_api ( $url ) {
+
+		// Allow users to supply auth details to enable a higher rate limit
+		if ( ! empty ( $this->client_id ) && ! empty ( $this->client_secret ) ) {
+			$url = add_query_arg(array ( 'client_id' => $this->client_id,
+			                     		 'client_secret' => $this->client_secret),
+								$url );
+		}
+
+		$args = array ( 'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed');
+		
+		$this->log ( __FUNCTION__." : $url", GEDEBUG_CALL );
+
+		$results = wp_remote_get ( $url, $args );
+
+		$this->log ( __FUNCTION__." : ".print_r($results,1), GEDEBUG_RESP );
+
+		if ( is_wp_error( $results ) ||
+		    ! isset ( $results['response']['code'] ) ||
+		    $results['response']['code'] != '200' ) {
+			header ( 'HTTP/1.0 404 Not Found' );
+			die ( 'Octocat is lost, and afraid' );
+		}
+
+		return $results;
+
+	}
 
 
 
@@ -15,18 +101,12 @@ class github_api {
 	 */
 	public function get_repo ( $owner, $repository ) {
 
+		$this->log ( "get_repo ( $owner, $repository )", GEDEBUG_CALL );
+
 		$owner = trim ( $owner, '/' );
 		$repository = trim ( $repository, '/' );
 
-		$results = wp_remote_get( "https://api.github.com/repos/$owner/$repository", $args = array (
-		              'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
+		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository" );
 
 		return json_decode ( $results['body'] );
 
@@ -42,18 +122,12 @@ class github_api {
 	 */
 	public function get_repo_commits ( $owner, $repository ) {
 
+		$this->log ( "get_repo_commits ( $owner, $repository )", GEDEBUG_CALL );
+
 		$owner = trim ( $owner, '/' );
 		$repository = trim ( $repository, '/' );
 
-		$results = wp_remote_get( "https://api.github.com/repos/$owner/$repository/commits", $args = array (
-			'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
+		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository/commits" );
 
 		return json_decode ( $results['body'] );
 
@@ -70,18 +144,27 @@ class github_api {
 	 */
 	public function get_repo_milestone_summary ( $owner, $repository, $milestone ) {
 
+		$this->log ( "get_repo_milestone_summary ( $owner, $repository, $milestone )", GEDEBUG_CALL );
+
 		$owner = trim ( $owner, '/' );
 		$repo = trim ( $repo, '/' );
 
-		$results = wp_remote_get( "https://api.github.com/repos/$owner/$repository/milestones/$milestone", $args = array (
-			'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
+		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
 
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
+		return json_decode ( $results['body'] );
+
+	}
+
+
+
+	public function get_repo_contributors ( $owner, $repository ) {
+
+		$this->log ( "get_repo_contributors ( $owner, $repository )", GEDEBUG_CALL );
+
+		$owner = trim ( $owner, '/' );
+		$repo = trim ( $repo, '/' );
+
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/collaborators" );
 
 		return json_decode ( $results['body'] );
 
@@ -96,21 +179,25 @@ class github_api {
 	 */
 	public function get_user ( $user ) {
 
+		$this->log ( "get_user ( $user )", GEDEBUG_CALL );
+
 		$user = trim ( $user, '/' );
 		$repository = trim ( $repository, '/' );
 
-		$results = wp_remote_get( "https://api.github.com/users/$user", $args = array (
-		              'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed' ) );
-
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
-		}
+		$results = $this->call_api ( "https://api.github.com/users/$user" );
 
 		return json_decode ( $results['body'] );
 
 	}
 	
+
+
+	private function log ( $msg, $level ) {
+		if ( GITHUB_API_LEVEL >= $level ) {
+			error_log ( "[GE$level]: ".$msg );
+		}
+	}
+
+
+
 }

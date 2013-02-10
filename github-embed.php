@@ -155,7 +155,11 @@ class github_embed {
 		}
 
 		// Issues / Milestones
-		if ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/issues.*$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
+		if ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/graphs/contributors/?$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
+
+			$this->oembed_github_repo_contributors ( $matches[1], $matches[2] );
+
+		} elseif ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/issues.*$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
 
 			if ( preg_match ( '#issues.?milestone=([0-9]*)#i', $url, $milestones ) ) {
 				$milestone = $milestones[1];
@@ -182,6 +186,52 @@ class github_embed {
 	}
 
 
+
+	private function oembed_github_repo_contributors ( $owner, $repository ) {
+
+	
+		$repo = $this->api->get_repo ( $owner, $repository );
+		$contributors = $this->api->get_repo_contributors ( $owner, $repository );
+
+		$response = new stdClass();
+		$response->type = 'rich';
+		$response->width = '10';
+		$response->height = '10';
+		$response->version = '1.0';
+		$response->title = $repo->description;
+
+		$gravatar_size = apply_filters ( 'github_oembed_gravatar_size', 64 );
+
+		// @TODO This should all be templated
+		$response->html = '<div class="github-embed github-embed-milestone-summary">';
+		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
+		
+		$response->html .= '<span class="github-heading">Contributors: </span>';
+
+		$response->html .= '<ul class="github-repo-contributors">';
+		
+		foreach ( $contributors as $contributor ) {
+
+			$details = $this->api->get_user ($contributor->login);
+			$response->html .= '<li class="github-repo-contributor">';
+			$response->html .= '<img class="github-repo-contributor-avatar" src="';
+			$response->html .= esc_url(add_query_arg(array('s'=>$gravatar_size), $contributor->avatar_url));
+			$response->html .= '" alt="Picture of '.esc_attr($contributor->login).'">';
+			if ( ! empty ( $details->name ) ) {
+				$response->html .= '<span class="github-repo-contributor-name">'.esc_html($details->name)."</span><br>";
+			}
+			$response->html .= '<span class="github-repo-contributor-login">';
+			$response->html .= '<a href="https://github.com/'.esc_attr($contributor->login).'">'.esc_attr($contributor->login).'</a></span>';
+		}
+
+		$response->html .= '</ul>';
+		$response->html .= '</div>';
+
+		header ( 'Content-Type: application/json' );
+		echo json_encode ( $response );
+		die();
+
+	}
 	/**
 	 * Retrieve the summary information for a repo's milestone, and
 	 * output it as an oembed response

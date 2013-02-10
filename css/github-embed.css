@@ -11,3 +11,14 @@
 	-moz-box-shadow: 2px 2px 2px #ddd;
 	box-shadow: 2px 2px 2px #ddd;
 }
+
+li.github-repo-contributor {
+	clear: both;
+	display: block;
+}
+
+.github-repo-contributor-avatar {
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 0.5em;
+}
