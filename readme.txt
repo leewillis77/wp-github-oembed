@@ -10,8 +10,9 @@ Stable tag: 1.1
 
 Plugin that allows you to embed details from github just by pasting in the URL as you would any other embed source. Currently supports:
 
-* GitHub repositories
-* GitHub user profiles
+* Repositories
+* User profiles
+* Project milestone summaries
 
 Coming soon:
 
@@ -38,6 +39,10 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 2. GitHub user profile
 
 == Changelog ==
+
+= ?? =
+Split API calls into separate class 
+Implement milestone summaries
 
 = 1.1 =
 Default CSS and more styling

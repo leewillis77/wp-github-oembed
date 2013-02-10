@@ -2,8 +2,9 @@
 
 Plugin that allows you to embed details from github just by pasting in the URL as you would any other embed source. Currently supports:
 
-* GitHub repositories
-* GitHub user profiles
+* Repositories
+* User profiles
+* Milestone summaries
 
 Coming soon:
 
