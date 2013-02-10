@@ -207,7 +207,7 @@ class github_embed {
 		$gravatar_size = apply_filters ( 'github_oembed_gravatar_size', 64 );
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-milestone-summary">';
+		$response->html = '<div class="github-embed github-embed-repo-contributors">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		
 		$response->html .= '<span class="github-heading">Contributors: </span>';
@@ -229,6 +229,7 @@ class github_embed {
 		}
 
 		$response->html .= '</ul>';
+		$response->html .= '<div style="clear: both;"></div>';
 		$response->html .= '</div>';
 
 		header ( 'Content-Type: application/json' );
