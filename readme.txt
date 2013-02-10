@@ -13,6 +13,7 @@ Plugin that allows you to embed details from github just by pasting in the URL a
 * Repositories
 * User profiles
 * Project milestone summaries
+* Project contributors
 
 Coming soon:
 
@@ -37,6 +38,8 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 
 1. GitHub Repository
 2. GitHub user profile
+3. Project milestone summaries
+4. Project contributors
 
 == Changelog ==
 

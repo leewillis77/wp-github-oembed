@@ -187,9 +187,13 @@ class github_embed {
 
 
 
+	/**
+	 * Retrieve a list of contributors for a project
+	 * @param  string $owner      The owner of the repository
+	 * @param  string $repository The repository name
+	 */
 	private function oembed_github_repo_contributors ( $owner, $repository ) {
 
-	
 		$repo = $this->api->get_repo ( $owner, $repository );
 		$contributors = $this->api->get_repo_contributors ( $owner, $repository );
 
@@ -232,6 +236,9 @@ class github_embed {
 		die();
 
 	}
+
+
+
 	/**
 	 * Retrieve the summary information for a repo's milestone, and
 	 * output it as an oembed response
