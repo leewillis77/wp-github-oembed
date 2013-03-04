@@ -44,7 +44,7 @@ class github_api {
 	 * @return int          The revised timeout setting
 	 */
 	function http_request_timeout ( $seconds ) {
-		return 25;
+		return $seconds < 25 ? 25 : $seconds;
 	}
 
 
