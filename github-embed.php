@@ -259,21 +259,21 @@ class github_embed {
 		// @TODO This should all be templated
 		$response->html = '<div class="github-embed github-embed-milestone-summary">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
-		
+
 		$response->html .= '<span class="github-heading">Milestone: </span>';
 		$response->html .= '<span class="github-milestone-title">'.esc_html($summary->title)."</span><br>";
-		
+
 		$response->html .= '<span class="github-heading">Issues: </span>';
 		$response->html .= '<span class="github-milestone-issues">';
-		$response->html .= esc_html($summary->open_issues)." open, ";
-		$response->html .= esc_html($summary->closed_issues)." closed.</span><br>";
-		
+		$response->html .= esc_html ( number_format_i18n ( $summary->open_issues ) )." open, ";
+		$response->html .= esc_html ( number_format_i18n ( $summary->closed_issues ) )." closed.</span><br>";
+
 		if ( ! empty ( $summary->due_on ) ) {
 			$response->html .= '<span class="github-heading">Due: </span>';
 			$due_date = date_format ( date_create ( $summary->due_on ), 'jS F Y' );
 			$response->html .= '<span class="github-milestone-due-date">'.esc_html($due_date).'</span><br>';
 		}
-		
+
 		$response->html .= '<p class="github-milestone-description">'.nl2br(esc_html($summary->description))."</p><br>";
 		$response->html .= '</div>';
 
@@ -305,8 +305,8 @@ class github_embed {
 		$response->html = '<div class="github-embed github-embed-repository">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
-		$response->html .= esc_html($repo->forks_count)." forks.<br/>";
-		$response->html .= esc_html($repo->open_issues_count)." open issues.<br/>";
+		$response->html .= esc_html ( number_format_i18n ( $repo->forks_count ) )." forks.<br/>";
+		$response->html .= esc_html ( number_format_i18n ( $repo->open_issues_count ) )." open issues.<br/>";
 
 		if ( count ( $commits ) ) {
 
@@ -360,8 +360,8 @@ class github_embed {
 		// @TODO This should all be templated
 		$response->html = '<div class="github-embed github-embed-user">';
 		$response->html .= '<p><a href="https://github.com/'.esc_attr($owner).'" target="_blank"><strong>'.esc_html($owner)."</strong></a><br/>";
-		$response->html .= esc_html($owner_info->public_repos).' repositories, ';
-		$response->html .= esc_html($owner_info->followers).' followers.</p>';
+		$response->html .= esc_html ( number_format_i18n ( $owner_info->public_repos ) ).' repositories, ';
+		$response->html .= esc_html ( number_format_i18n ( $owner_info->followers ) ).' followers.</p>';
 		$response->html .= '</div>';
 
 		header ( 'Content-Type: application/json' );
