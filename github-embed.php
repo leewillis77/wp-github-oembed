@@ -33,7 +33,7 @@ Author URI: http://www.leewillis.co.uk/
 
 /**
  * This class handles being the oEmbed provider in terms of registering the URLs that
- * we can embed, and handling the actual oEmbed calls. It relies on the github_api 
+ * we can embed, and handling the actual oEmbed calls. It relies on the github_api
  * class to retrieve the information from the GitHub API.
  * @uses class github_api
  */
@@ -56,7 +56,7 @@ class github_embed {
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
 		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
-		
+
 		// @TODO i18n
 
 	}
@@ -71,7 +71,7 @@ class github_embed {
 
 		wp_register_style ( 'github-embed', plugins_url(basename(dirname(__FILE__)).'/css/github-embed.css' ) );
         wp_enqueue_style ( 'github-embed' );
-	
+
 	}
 
 
@@ -102,7 +102,7 @@ class github_embed {
 	private function get_key() {
 
 		$key = get_option ( 'github_oembed_key' );
-		
+
 		if ( ! $key ) {
 			$key = md5 ( time() . rand ( 0,65535 ) );
 			add_option ( 'github_oembed_key', $key, '', 'yes' );
@@ -209,11 +209,11 @@ class github_embed {
 		// @TODO This should all be templated
 		$response->html = '<div class="github-embed github-embed-repo-contributors">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
-		
+
 		$response->html .= '<span class="github-heading">Contributors: </span>';
 
 		$response->html .= '<ul class="github-repo-contributors">';
-		
+
 		foreach ( $contributors as $contributor ) {
 
 			$details = $this->api->get_user ($contributor->login);
@@ -281,7 +281,7 @@ class github_embed {
 		echo json_encode ( $response );
 		die();
 
-	} 
+	}
 
 
 
@@ -323,7 +323,7 @@ class github_embed {
 				$response->html .= '<a href="https://github.com/'.$owner.'/'.$repository.'/commit/'.esc_attr($commit->sha).'" target="_blank">'.esc_html($commit->commit->message)."</a>, ";
 				$response->html .= esc_html($commit->commit->committer->name);
 				$response->html .= '</li>';
-				
+
 				$cnt++;
 
 			}
