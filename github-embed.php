@@ -4,7 +4,7 @@
 Plugin Name: Github Embed
 Plugin URI: http://www.leewillis.co.uk/wordpress-plugins
 Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
-Version: 1.2
+Version: 1.3
 Author: Lee Willis
 Author URI: http://www.leewillis.co.uk/
 */
@@ -56,10 +56,46 @@ class github_embed {
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
 		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
+        add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
+        add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
 
 		// @TODO i18n
 
 	}
+
+
+
+    /**
+     * Make sure we have a scheduled event set to clear down the oEmbed cache until
+     * WordPress supports cache_age in oEmbed responses.
+     */
+    function schedule_expiry() {
+
+        if( ! wp_next_scheduled( 'github_embed_cron' ) ) {
+            $frequency = apply_filters ( 'github_embed_cache_frequency', 'daily' );
+           wp_schedule_event( time(), $frequency, 'github_embed_cron' );
+        }
+
+    }
+
+
+
+    /**
+     * Expire old oEmbeds.
+     * Note: This is a bit sledgehammer-to-crack-a-nut hence why I'm only running it
+     * daily. Ideally WP should honour cache_age in oEmbed responses properly
+     */
+    function cron() {
+
+        global $wpdb, $table_prefix;
+
+        $sql = "DELETE
+                  FROM {$table_prefix}postmeta
+                 WHERE meta_key LIKE '_oembed_%'";
+
+        $results = $wpdb->get_results ( $sql );
+
+    }
 
 
 

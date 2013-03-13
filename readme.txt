@@ -4,7 +4,7 @@ Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&
 Tags: github, embed, oembed
 Requires at least: 3.5
 Tested up to: 3.5.1
-Stable tag: 1.2
+Stable tag: 1.3
 
 == Description ==
 
@@ -43,9 +43,13 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 
 == Changelog ==
 
+= 1.3 =
+
+* Expire the oEmbed cache daily
+
 = 1.2 =
 
-* Split API calls into separate class 
+* Split API calls into separate class
 * Implement milestone summaries
 * Implement contributor lists
 

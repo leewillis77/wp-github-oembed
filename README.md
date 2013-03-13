@@ -41,6 +41,9 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 ## Changelog
 
+- 1.3
+    - Expire the oEmbed cache daily
+
 - 1.2
     - Support for milestone summaries
     - Support for contributor lists
