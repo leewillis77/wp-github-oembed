@@ -1,10 +1,10 @@
 mkdir out
 mkdir out/github-embed
 rm out/github-embed/*
-cp readme*  		        out/github-embed
-cp banner-772x250.png		out/github-embed
-cp screenshot-*  				out/github-embed
-cp -r src/* 				    out/github-embed
+cp doc/readme*  		    		out/github-embed
+cp doc/banner-772x250.png		out/github-embed
+cp screenshot-*  						out/github-embed
+cp -r src/* 				    		out/github-embed
 cd out
 zip github-embed.zip github-embed/*
 tar -cvf github-embed.tar.gz github-embed/*

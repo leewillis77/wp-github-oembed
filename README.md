@@ -44,6 +44,7 @@ Not yet, we're hoping to add templating - all contributions welcome!
   Versioned files
 ```
   -+ /
+   + doc/       Docs files
    + src/       Module source files
    + tools/     Automated plugin packager scripts
 ```
