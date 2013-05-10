@@ -83,8 +83,8 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 5. Link src project directory to your Wordperfect site plugins directory
 ```shell
-  ln -s /home/developer/projects/wp-github-oembed/src/ /var/www/sandbox/wordpress/simply/wp-content/plugins
-  ln -s /home/developer/projects/wp-github-oembed/src/ /var/www/sandbox/wordpress/multisite/wp-content/plugins
+  ln -s /home/developer/projects/wp-github-oembed/src/ /var/www/sandbox/wordpress/simply/wp-content/plugins/github-embed
+  ln -s /home/developer/projects/wp-github-oembed/src/ /var/www/sandbox/wordpress/multisite/wp-content/plugins/github-embed
 ```
 
 

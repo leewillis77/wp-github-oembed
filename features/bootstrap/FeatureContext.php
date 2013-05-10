@@ -39,17 +39,17 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^I am on simply admin login$/
+     *  @Given /^I am on simply admin home$/
      */
-    public function iAmOnSimplyAdminLogin()
+    public function iAmOnSimplyAdminHome()
     {
         $this->getSession()->visit($this->locatePath(WORDPRESS_SIMPLY_ADMIN));
     }
 
     /**
-     * @Given /^I am on multisite admin login$/
+     * @Given /^I am on multisite admin home$/
      */
-    public function iAmOnMultisiteAdminLogin()
+    public function iAmOnMultisiteAdminHome()
     {
         $this->getSession()->visit($this->locatePath(WORDPRESS_MULTISITE_ADMIN));
     }
