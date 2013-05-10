@@ -1,9 +1,12 @@
 <?php
 
-define('WORDPRESS_ADMIN_USER', 'test@test.test');
+define('WORDPRESS_ADMIN_USER', 'test');
 define('WORDPRESS_ADMIN_PASSWORD', 'testtest');
+
 define('WORDPRESS_SIMPLY_HOME', 'simply/');
+define('WORDPRESS_SIMPLY_ADMIN', 'simply/wp-admin/');
 define('WORDPRESS_MULTISITE_HOME', 'multisite/test1/');
+define('WORDPRESS_MULTISITE_ADMIN', 'multisite/test1/wp-admin/');
 
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
@@ -34,4 +37,31 @@ class FeatureContext extends MinkContext
     {
         $this->getSession()->visit($this->locatePath(WORDPRESS_MULTISITE_HOME));
     }
+
+    /**
+     * @Given /^I am on simply admin login$/
+     */
+    public function iAmOnSimplyAdminLogin()
+    {
+        $this->getSession()->visit($this->locatePath(WORDPRESS_SIMPLY_ADMIN));
+    }
+
+    /**
+     * @Given /^I am on multisite admin login$/
+     */
+    public function iAmOnMultisiteAdminLogin()
+    {
+        $this->getSession()->visit($this->locatePath(WORDPRESS_MULTISITE_ADMIN));
+    }
+
+    /**
+     * @When /^I am logged in$/
+     */
+    public function iAmLoggedIn()
+    {
+        $this->getSession()->getPage()->find('css', 'input[name="log"]')->setValue(WORDPRESS_ADMIN_USER);
+        $this->getSession()->getPage()->find('css', 'input[name="pwd"]')->setValue(WORDPRESS_ADMIN_PASSWORD);
+        $this->getSession()->getPage()->find('css', 'input[name="wp-submit"]')->click();
+    }
+
 }
