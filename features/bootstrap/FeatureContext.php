@@ -7,6 +7,7 @@ define('WORDPRESS_SIMPLY_HOME', 'simply/');
 define('WORDPRESS_SIMPLY_ADMIN', 'simply/wp-admin/');
 define('WORDPRESS_MULTISITE_HOME', 'multisite/test1/');
 define('WORDPRESS_MULTISITE_ADMIN', 'multisite/test1/wp-admin/');
+define('WORDPRESS_POST_TITLE', 'test wp-github-oembed');
 
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
@@ -22,6 +23,8 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext
 {
+		private static $testPostURL = false;
+
     /**
      * @Given /^I am on simply homepage$/
      */
@@ -62,6 +65,145 @@ class FeatureContext extends MinkContext
         $this->getSession()->getPage()->find('css', 'input[name="log"]')->setValue(WORDPRESS_ADMIN_USER);
         $this->getSession()->getPage()->find('css', 'input[name="pwd"]')->setValue(WORDPRESS_ADMIN_PASSWORD);
         $this->getSession()->getPage()->find('css', 'input[name="wp-submit"]')->click();
+    }
+
+    /**
+     * @When /^I go to admin plugins page$/
+     */
+    public function iGoToAdminPluginsPage()
+    {
+        $this->getSession()->getPage()->find('xpath', '//a[text()="Installed Plugins"]')->click();
+    }
+
+    /**
+     * @Given /^plugin must be activated$/
+     */
+    public function pluginMustBeActivated()
+    {
+        $this->iGoToAdminPluginsPage();
+        $flag = $this->getSession()->getPage()->find('css', '#github-embed .activate');
+        if (!is_null($flag)) {
+            $this->getSession()->getPage()->find('css', '#github-embed .activate a')->click();
+        }
+    }
+
+    /**
+     * @Given /^plugin must be deactivated$/
+     */
+    public function pluginMustBeDeactivated()
+    {
+        $this->iGoToAdminPluginsPage();
+        $flag = $this->getSession()->getPage()->find('css', '#github-embed .deactivate');
+        if (!is_null($flag)) {
+            $this->getSession()->getPage()->find('css', '#github-embed .deactivate a')->click();
+        }
+    }
+
+    /**
+     * @Given /^test post must be created$/
+     */
+    public function testPostMustBeCreated()
+    {
+    		if (!self::$testPostURL) {
+    			$this->createPost();
+    		}
+    }
+
+    /**
+     * Create post for tests
+     */
+    private function createPost()
+    {
+        $this->getSession()->getPage()->find('xpath', '//a[text()="All Posts"]')->click();
+        $this->getSession()->getPage()->find('css', 'input[name="s"]')->setValue(WORDPRESS_POST_TITLE);
+        $this->getSession()->getPage()->find('xpath', '//input[@value="Search Posts"]')->click();
+        $flag = $this->getSession()->getPage()->find('xpath', '//text()[contains(.,"No posts found")]');
+        if (!is_null($flag)) {
+            $this->getSession()->visit($this->locatePath(WORDPRESS_SIMPLY_ADMIN.'post-new.php'));
+						$this->getSession()->getPage()->find('css', 'input[name="post_title"]')->setValue(WORDPRESS_POST_TITLE);
+						$this->getSession()->getPage()->find('css', 'textarea[name="content"]')->setValue("
+							<div id='test-oembed-repositories'>
+							  <h3>Repositories</h3>
+								https://github.com/leewillis77/wp-github-oembed
+							</div>
+							<div id='test-oembed-user-profiles'>
+							  <h3>User profiles</h3>
+								https://github.com/leewillis77/
+							</div>
+							<div id='test-oembed-milestone-summaries'>
+								<h3>Milestone summaries</h3>
+								https://github.com/leewillis77/wp-github-oembed/issues?milestone=1&state=open
+							</div>
+							<div id='test-oembed-repository-contributors'>
+								<h3>Repository contributors</h3>
+								https://github.com/leewillis77/wp-github-oembed/graphs/contributors
+							</div>
+
+						");
+						$this->getSession()->getPage()->find('css', 'input[name="publish"]')->click();
+        }
+        $this->getSession()->getPage()->find('xpath', '//a[text()="All Posts"]')->click();
+        $this->getSession()->getPage()->find('css', 'input[name="s"]')->setValue(WORDPRESS_POST_TITLE);
+        $this->getSession()->getPage()->find('xpath', '//input[@value="Search Posts"]')->click();
+        $this->getSession()->getPage()->find('xpath', '//a[text()="Edit"]')->click();
+        $this->getSession()->getPage()->find('xpath', '//a[text()="View Post"]')->click();
+        self::$testPostURL = $this->getSession()->getCurrentURL();
+    }
+
+    /**
+     * @Given /^I am on test post$/
+     */
+    public function iAmOnTestPost()
+    {
+        $this->getSession()->visit(self::$testPostURL);
+    }
+
+    /**
+     * @Then /^I should see the embedded repository$/
+     */
+    public function iShouldSeeTheEmbeddedRepository()
+    {
+				$flagTitle		= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-repositories"]//text()[contains(.,"WordPress Github ")]');
+				$flagForks 		= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-repositories"]//text()[contains(.,"forks")]');
+				$flagIssues 	= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-repositories"]//text()[contains(.,"open issues")]');
+				$flagCommits 	= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-repositories"]//text()[contains(.,"Recent commits")]');
+        if (is_null($flagTitle) || is_null($flagForks) || is_null($flagIssues) || is_null($flagCommits)) {
+        	throw new Exception("Embedded repository not found in {$this->getSession()->getCurrentUrl()} page.");
+        }
+    }
+
+    /**
+     * @Then /^I should see the embedded user profile$/
+     */
+    public function iShouldSeeTheEmbeddedUserProfile()
+    {
+				$flagRepositories	= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-user-profiles"]//text()[contains(.,"repositories")]');
+				$flagFollowers 		= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-user-profiles"]//text()[contains(.,"followers")]');
+        if (is_null($flagRepositories) || is_null($flagFollowers)) {
+        	throw new Exception("Embedded user profile not found in {$this->getSession()->getCurrentUrl()} page.");
+        }
+    }
+
+    /**
+     * @Then /^I should see the embedded milestone summaries$/
+     */
+    public function iShouldSeeTheEmbeddedMilestoneSummaries()
+    {
+				$flag	= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-milestone-summaries"]//text()[contains(.,"Test Milestone")]');
+        if (is_null($flag)) {
+        	throw new Exception("Embedded milestone summaries not found in {$this->getSession()->getCurrentUrl()} page.");
+        }
+    }
+
+    /**
+     * @Then /^I should see the embedded repository contributors$/
+     */
+    public function iShouldSeeTheEmbeddedRepositoryContributors()
+    {
+				$flag	= $this->getSession()->getPage()->find('xpath', '//div[@id="test-oembed-repository-contributors"]//text()[contains(.,"Contributors:")]');
+        if (is_null($flag)) {
+        	throw new Exception("Embedded repository contributors not found in {$this->getSession()->getCurrentUrl()} page.");
+        }
     }
 
 }
