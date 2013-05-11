@@ -138,6 +138,31 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * Fill post form
+     */
+		private function setPostContent() {
+				$this->getSession()->getPage()->find('css', 'input[name="post_title"]')->setValue(WORDPRESS_POST_TITLE);
+				$this->getSession()->getPage()->find('css', 'textarea[name="content"]')->setValue("
+					<div id='test-oembed-repositories'>
+					  <h3>Repositories</h3>
+						https://github.com/leewillis77/wp-github-oembed
+					</div>
+					<div id='test-oembed-user-profiles'>
+					  <h3>User profiles</h3>
+						https://github.com/leewillis77/
+					</div>
+					<div id='test-oembed-milestone-summaries'>
+						<h3>Milestone summaries</h3>
+						https://github.com/leewillis77/wp-github-oembed/issues?milestone=1&state=open
+					</div>
+					<div id='test-oembed-repository-contributors'>
+						<h3>Repository contributors</h3>
+						https://github.com/leewillis77/wp-github-oembed/graphs/contributors
+					</div>
+				");
+		}
+
+    /**
      * Create post for tests
      */
     private function createPost()
@@ -148,34 +173,13 @@ class FeatureContext extends MinkContext
         $flag = $this->getSession()->getPage()->find('xpath', '//text()[contains(.,"No posts found")]');
         if (!is_null($flag)) {
 						$this->getSession()->getPage()->find('xpath', '//li[@id="menu-posts"]//a[text()="Add New"]')->click();
-						$this->getSession()->getPage()->find('css', 'input[name="post_title"]')->setValue(WORDPRESS_POST_TITLE);
-						$this->getSession()->getPage()->find('css', 'textarea[name="content"]')->setValue("
-							<div id='test-oembed-repositories'>
-							  <h3>Repositories</h3>
-								https://github.com/leewillis77/wp-github-oembed
-							</div>
-							<div id='test-oembed-user-profiles'>
-							  <h3>User profiles</h3>
-								https://github.com/leewillis77/
-							</div>
-							<div id='test-oembed-milestone-summaries'>
-								<h3>Milestone summaries</h3>
-								https://github.com/leewillis77/wp-github-oembed/issues?milestone=1&state=open
-							</div>
-							<div id='test-oembed-repository-contributors'>
-								<h3>Repository contributors</h3>
-								https://github.com/leewillis77/wp-github-oembed/graphs/contributors
-							</div>
-
-						");
-						//$this->getSession()->getPage()->find('css', 'input[name="publish"]')->click();
+						$this->setPostContent();
 						$this->getSession()->getPage()->find('xpath', '//input[@id="save-post"]')->click();
+        } else {
+        		$this->getSession()->getPage()->find('xpath', '//a[text()="Edit"]')->click();
+        		$this->setPostContent();
+        		$this->getSession()->getPage()->find('xpath', '//input[@id="save-post"]')->click();
         }
-        $this->getSession()->getPage()->find('xpath', '//a[text()="All Posts"]')->click();
-        $this->getSession()->getPage()->find('css', 'input[name="s"]')->setValue(WORDPRESS_POST_TITLE);
-        $this->getSession()->getPage()->find('xpath', '//input[@value="Search Posts"]')->click();
-        $this->getSession()->getPage()->find('xpath', '//a[text()="Edit"]')->click();
-        //$this->getSession()->getPage()->find('xpath', '//a[text()="View Post"]')->click();
         $this->getSession()->getPage()->find('xpath', '//a[@id="post-preview"]')->click();
         $this->setTestPostURL($this->getSession()->getCurrentURL());
     }
