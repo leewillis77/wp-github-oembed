@@ -23,7 +23,35 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext
 {
-		private static $testPostURL = false;
+		private static $testPostURLSimply = false;
+		private static $testPostURLMultisite = false;
+
+		private function isMultisite()
+		{
+				if (preg_match('|'.WORDPRESS_SIMPLY_HOME.'|', $this->getSession()->getCurrentURL())) {
+						return false;
+				} else {
+						return true;
+				}
+		}
+
+		private function setTestPostURL($value)
+		{
+				if ($this->isMultisite()) {
+					self::$testPostURLSimply = $value;
+				} else {
+					self::$testPostURLMultisite = $value;
+				}
+		}
+
+		private function getTestPostURL()
+		{
+				if ($this->isMultisite()) {
+					return self::$testPostURLSimply;
+				} else {
+					return self::$testPostURLMultisite;
+				}
+		}
 
     /**
      * @Given /^I am on simply homepage$/
@@ -104,7 +132,7 @@ class FeatureContext extends MinkContext
      */
     public function testPostMustBeCreated()
     {
-    		if (!self::$testPostURL) {
+    		if (!$this->getTestPostURL()) {
     			$this->createPost();
     		}
     }
@@ -119,7 +147,7 @@ class FeatureContext extends MinkContext
         $this->getSession()->getPage()->find('xpath', '//input[@value="Search Posts"]')->click();
         $flag = $this->getSession()->getPage()->find('xpath', '//text()[contains(.,"No posts found")]');
         if (!is_null($flag)) {
-            $this->getSession()->visit($this->locatePath(WORDPRESS_SIMPLY_ADMIN.'post-new.php'));
+						$this->getSession()->getPage()->find('xpath', '//li[@id="menu-posts"]//a[text()="Add New"]')->click();
 						$this->getSession()->getPage()->find('css', 'input[name="post_title"]')->setValue(WORDPRESS_POST_TITLE);
 						$this->getSession()->getPage()->find('css', 'textarea[name="content"]')->setValue("
 							<div id='test-oembed-repositories'>
@@ -140,14 +168,16 @@ class FeatureContext extends MinkContext
 							</div>
 
 						");
-						$this->getSession()->getPage()->find('css', 'input[name="publish"]')->click();
+						//$this->getSession()->getPage()->find('css', 'input[name="publish"]')->click();
+						$this->getSession()->getPage()->find('xpath', '//input[@id="save-post"]')->click();
         }
         $this->getSession()->getPage()->find('xpath', '//a[text()="All Posts"]')->click();
         $this->getSession()->getPage()->find('css', 'input[name="s"]')->setValue(WORDPRESS_POST_TITLE);
         $this->getSession()->getPage()->find('xpath', '//input[@value="Search Posts"]')->click();
         $this->getSession()->getPage()->find('xpath', '//a[text()="Edit"]')->click();
-        $this->getSession()->getPage()->find('xpath', '//a[text()="View Post"]')->click();
-        self::$testPostURL = $this->getSession()->getCurrentURL();
+        //$this->getSession()->getPage()->find('xpath', '//a[text()="View Post"]')->click();
+        $this->getSession()->getPage()->find('xpath', '//a[@id="post-preview"]')->click();
+        $this->setTestPostURL($this->getSession()->getCurrentURL());
     }
 
     /**
@@ -155,7 +185,10 @@ class FeatureContext extends MinkContext
      */
     public function iAmOnTestPost()
     {
-        $this->getSession()->visit(self::$testPostURL);
+    		if ($this->isMultisite()) {
+    				$this->iAmOnMultisiteHomepage();
+    		}
+        $this->getSession()->visit($this->getTestPostURL());
     }
 
     /**
@@ -206,4 +239,19 @@ class FeatureContext extends MinkContext
         }
     }
 
+    /**
+     * @Given /^I go to network admin$/
+     */
+    public function iGoToNetworkAdmin()
+    {
+        $this->getSession()->getPage()->find('xpath', '//a[text()="Network Admin"]')->click();
+    }
+
+    /**
+     * @Given /^I go to test blog$/
+     */
+    public function iGoToTestBlog()
+    {
+        $this->getSession()->getPage()->find('xpath', '//a[text()="test1"]')->click();
+    }
 }
