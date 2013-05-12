@@ -1,0 +1,10 @@
+#!/bin/bash
+if ! msgfmt="$(type -p msgfmt)" || [ -z msgfmt ]; then
+  echo "I require msgfmt but gettext package it's not installed.  Aborting.";
+  echo "  Use apt-get install gettext";
+  exit 1;
+fi
+
+cd src/languages/
+for file in `find . -name "*.po"` ; do msgfmt -o `echo $file | sed s/\.po/\.mo/` $file ; done
+cd ../..
