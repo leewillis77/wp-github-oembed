@@ -56,14 +56,47 @@ class github_embed {
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
 		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
-        add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
-        add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
+    add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
+    add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
 
-		// @TODO i18n
-
+    if(is_admin()){
+	    add_action('admin_menu', array($this, 'add_plugin_page'));
+	    add_action('admin_init', array($this, 'page_init'));
+		}
 	}
 
+		/**
+	 	* Create admin menu entry under "Settings"
+	 	*/
+    public function add_plugin_page() {
+			add_options_page('Settings Admin', 'Github Embed', 'manage_options', 'githubembed-setting-admin', array($this, 'create_admin_page'));
+    }
 
+		/**
+	 	* The admin page constructor
+	 	*/
+    public function create_admin_page() {
+		?>
+				<div class="wrap">
+				    <?php screen_icon(); ?>
+				    <h2>Github Embed Settings</h2>
+
+				    <form method="post" action="options.php">
+				    		<?php
+					    			settings_fields('githubembed_cache_group');
+								?>
+				        <?php submit_button('Clear cache'); ?>
+				    </form>
+				</div>
+		<?php
+    }
+
+		/**
+	 	* Create the admin page elements
+	 	*/
+    public function page_init() {
+				register_setting('githubembed_cache_group', 'array_key', array($this, 'cron'));
+    }
 
     /**
      * Make sure we have a scheduled event set to clear down the oEmbed cache until
