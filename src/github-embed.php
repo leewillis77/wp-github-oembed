@@ -148,11 +148,10 @@ class github_embed {
 	 */
 	function enqueue_styles() {
 
-		wp_register_style ( 'github-embed', plugins_url(basename(dirname(__FILE__)).'/css/github-embed.css' ) );
+		wp_register_style ( 'github-embed', plugins_url('/github-embed/css/github-embed.css' ) );
         wp_enqueue_style ( 'github-embed' );
 
 	}
-
 
 
 	/**
