@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 
@@ -73,7 +73,7 @@ class github_api {
 		}
 
 		$args = array ( 'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed');
-		
+
 		$this->log ( __FUNCTION__." : $url", GEDEBUG_CALL );
 
 		$results = wp_remote_get ( $url, $args );
@@ -189,7 +189,7 @@ class github_api {
 		return json_decode ( $results['body'] );
 
 	}
-	
+
 
 
 	private function log ( $msg, $level ) {

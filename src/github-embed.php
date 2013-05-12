@@ -52,24 +52,34 @@ class github_embed {
 	public function __construct ( $api ) {
 
 		$this->api = $api;
-
 		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
 		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
+
 		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
     add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
     add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
 
-    if(is_admin()){
-	    add_action('admin_menu', array($this, 'add_plugin_page'));
-	    add_action('admin_init', array($this, 'page_init'));
-		}
+      add_action ( 'plugins_loaded', array ( $this, 'i18n' ) );
+      //add_action ( 'init', array ( $this, 'i18n' ) );
+	    if(is_admin()){
+		  		add_action('admin_menu', array($this, 'add_plugin_page'));
+		    	add_action('admin_init', array($this, 'page_init'));
+			}
 	}
+
+		/**
+		* Init i18n files
+		*/
+		function i18n() {
+				$this->plugin_directory = dirname(__FILE__) . '/';
+				load_plugin_textdomain('githubembed', false, 'github-embed/languages/');
+		}
 
 		/**
 	 	* Create admin menu entry under "Settings"
 	 	*/
     public function add_plugin_page() {
-			add_options_page('Settings Admin', 'Github Embed', 'manage_options', 'githubembed-setting-admin', array($this, 'create_admin_page'));
+				add_options_page('Settings Admin', 'Github Embed', 'manage_options', 'githubembed-setting-admin', array($this, 'create_admin_page'));
     }
 
 		/**
@@ -79,13 +89,13 @@ class github_embed {
 		?>
 				<div class="wrap">
 				    <?php screen_icon(); ?>
-				    <h2>Github Embed Settings</h2>
+				    <h2><?php echo __('Github Embed Settings', 'githubembed') ?></h2>
 
 				    <form method="post" action="options.php">
 				    		<?php
 					    			settings_fields('githubembed_cache_group');
 								?>
-				        <?php submit_button('Clear cache'); ?>
+				        <?php submit_button(__('Clear cache', 'githubembed')); ?>
 				    </form>
 				</div>
 		<?php
@@ -329,16 +339,16 @@ class github_embed {
 		$response->html = '<div class="github-embed github-embed-milestone-summary">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 
-		$response->html .= '<span class="github-heading">Milestone: </span>';
+		$response->html .= '<span class="github-heading">'.__('Milestone', 'githubembed').': </span>';
 		$response->html .= '<span class="github-milestone-title">'.esc_html($summary->title)."</span><br>";
 
-		$response->html .= '<span class="github-heading">Issues: </span>';
+		$response->html .= '<span class="github-heading">'.__('Issues', 'githubembed').': </span>';
 		$response->html .= '<span class="github-milestone-issues">';
-		$response->html .= esc_html ( number_format_i18n ( $summary->open_issues ) )." open, ";
-		$response->html .= esc_html ( number_format_i18n ( $summary->closed_issues ) )." closed.</span><br>";
+		$response->html .= esc_html ( number_format_i18n ( $summary->open_issues ) )." ".__('open', 'githubembed').", ";
+		$response->html .= esc_html ( number_format_i18n ( $summary->closed_issues ) )." ".__('closed', 'githubembed').".</span><br>";
 
 		if ( ! empty ( $summary->due_on ) ) {
-			$response->html .= '<span class="github-heading">Due: </span>';
+			$response->html .= '<span class="github-heading">'.__('Due', 'githubembed').': </span>';
 			$due_date = date_format ( date_create ( $summary->due_on ), 'jS F Y' );
 			$response->html .= '<span class="github-milestone-due-date">'.esc_html($due_date).'</span><br>';
 		}
@@ -374,13 +384,13 @@ class github_embed {
 		$response->html = '<div class="github-embed github-embed-repository">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
-		$response->html .= esc_html ( number_format_i18n ( $repo->forks_count ) )." forks.<br/>";
-		$response->html .= esc_html ( number_format_i18n ( $repo->open_issues_count ) )." open issues.<br/>";
+		$response->html .= esc_html ( number_format_i18n ( $repo->forks_count ) )." ".__('forks', 'githubembed').".<br/>";
+		$response->html .= esc_html ( number_format_i18n ( $repo->open_issues_count ) )." ".__('open issues', 'githubembed').".<br/>";
 
 		if ( count ( $commits ) ) {
 
 			$cnt = 0;
-			$response->html .= 'Recent commits:';
+			$response->html .= __('Recent commits', 'githubembed').':';
 			$response->html .= '<ul class="github_commits">';
 
 			foreach ( $commits as $commit ) {
@@ -429,8 +439,8 @@ class github_embed {
 		// @TODO This should all be templated
 		$response->html = '<div class="github-embed github-embed-user">';
 		$response->html .= '<p><a href="https://github.com/'.esc_attr($owner).'" target="_blank"><strong>'.esc_html($owner)."</strong></a><br/>";
-		$response->html .= esc_html ( number_format_i18n ( $owner_info->public_repos ) ).' repositories, ';
-		$response->html .= esc_html ( number_format_i18n ( $owner_info->followers ) ).' followers.</p>';
+		$response->html .= esc_html ( number_format_i18n ( $owner_info->public_repos ) ).' '.__('repositories', 'githubembed').', ';
+		$response->html .= esc_html ( number_format_i18n ( $owner_info->followers ) ).' '.__('followers', 'githubembed').'.</p>';
 		$response->html .= '</div>';
 
 		header ( 'Content-Type: application/json' );

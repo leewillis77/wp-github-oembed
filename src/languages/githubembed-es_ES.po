@@ -11,3 +11,33 @@ msgstr "Configuración de Github Embed"
 msgid "Clear cache"
 msgstr "Borrar cache"
 
+msgid "forks"
+msgstr "ramas"
+
+msgid "open issues"
+msgstr "incidencias abiertas"
+
+msgid "Recent commits"
+msgstr "Commits recientes"
+
+msgid "repositories"
+msgstr "repositorios"
+
+msgid "followers"
+msgstr "seguidores"
+
+msgid "Milestone"
+msgstr "Hito"
+
+msgid "Issues"
+msgstr "incidencias"
+
+msgid "open"
+msgstr "abiertos"
+
+msgid "closed"
+msgstr "cerrados"
+
+msgid "Due"
+msgstr "Vencimiento"
+
