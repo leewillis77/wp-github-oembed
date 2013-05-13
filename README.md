@@ -118,6 +118,21 @@ You can test the development environment configuration
 	./bin/behat features/enviroment/
 ```
 
+Run all tests
+```shell
+	./bin/behat
+```
+
+Run all tests for simply wordpress
+```shell
+	./bin/behat features/simply/
+```
+
+Run all tests for multisite wordpress
+```shell
+	./bin/behat features/multisite/
+```
+
 **Wordpress admin must be in english for BDD tests**
 
 ## Changelog
