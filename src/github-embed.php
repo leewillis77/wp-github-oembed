@@ -39,52 +39,47 @@ Author URI: http://www.leewillis.co.uk/
  */
 class github_embed {
 
-
-
 	private $api;
 
+	  /**
+	   * Constructor. Registers hooks and filters
+	   * @param class $api An instance of the github_api classs
+	   */
+	  public function __construct ( $api ) {
+		    $this->api = $api;
 
+		    add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
+		    add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
 
-	/**
-	 * Constructor. Registers hooks and filters
-	 * @param class $api An instance of the github_api classs
-	 */
-	public function __construct ( $api ) {
+		    add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
+        add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
+        add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
 
-		$this->api = $api;
-		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
-		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
-
-		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
-    add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
-    add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
-
-      add_action ( 'plugins_loaded', array ( $this, 'i18n' ) );
-      //add_action ( 'init', array ( $this, 'i18n' ) );
-	    if(is_admin()){
-		  		add_action('admin_menu', array($this, 'add_plugin_page'));
-		    	add_action('admin_init', array($this, 'page_init'));
-			}
-	}
+        add_action ( 'plugins_loaded', array ( $this, 'i18n' ) );
+	      if(is_admin()){
+		    		add_action('admin_menu', array($this, 'add_plugin_page'));
+		      	add_action('admin_init', array($this, 'page_init'));
+			  }
+	  }
 
 		/**
-		* Init i18n files
-		*/
+		 * Init i18n files
+		 */
 		function i18n() {
 				$this->plugin_directory = dirname(__FILE__) . '/';
 				load_plugin_textdomain('githubembed', false, 'github-embed/languages/');
 		}
 
 		/**
-	 	* Create admin menu entry under "Settings"
-	 	*/
+	 	 * Create admin menu entry under "Settings"
+	 	 */
     public function add_plugin_page() {
 				add_options_page('Settings Admin', 'Github Embed', 'manage_options', 'githubembed-setting-admin', array($this, 'create_admin_page'));
     }
 
 		/**
-	 	* The admin page constructor
-	 	*/
+	 	 * The admin page constructor
+	 	 */
     public function create_admin_page() {
 		?>
 				<div class="wrap">
@@ -102,8 +97,8 @@ class github_embed {
     }
 
 		/**
-	 	* Create the admin page elements
-	 	*/
+	 	 * Create the admin page elements
+	 	 */
     public function page_init() {
 				register_setting('githubembed_cache_group', 'array_key', array($this, 'cron'));
     }
