@@ -1,0 +1,4 @@
+out/*
+/composer.phar
+/bin/
+/vendor/

@@ -1,0 +1,7 @@
+default:
+    extensions:
+        Behat\MinkExtension\Extension:
+            base_url: http://localhost/sandbox/wordpress
+            goutte: ~
+            selenium2: ~
+
