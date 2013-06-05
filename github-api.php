@@ -1,18 +1,18 @@
-<?php 
+<?php
 
 
 
 // 0 - none
-define ( 'GEDEBUG_NONE', 0 );
+define( 'GEDEBUG_NONE', 0 );
 
 // 1 - call logging only
-define ( 'GEDEBUG_CALL', 1 );
+define( 'GEDEBUG_CALL', 1 );
 
 // 2 - calls, and responses
-define ( 'GEDEBUG_RESP', 2 );
+define( 'GEDEBUG_RESP', 2 );
 
 // Selected debug level
-define ( 'GITHUB_API_LEVEL', GEDEBUG_RESP );
+define( 'GITHUB_API_LEVEL', GEDEBUG_RESP );
 
 
 /**
@@ -31,8 +31,8 @@ class github_api {
 	 */
 	function __construct() {
 
-		add_action ( 'plugins_loaded', array ( $this, 'set_credentials' ) );
-		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
+		add_action( 'plugins_loaded', array( $this, 'set_credentials' ) );
+		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
 
 	}
 
@@ -43,7 +43,7 @@ class github_api {
 	 * @param  int $seconds The current timeout setting
 	 * @return int          The revised timeout setting
 	 */
-	function http_request_timeout ( $seconds ) {
+	function http_request_timeout( $seconds ) {
 		return $seconds < 25 ? 25 : $seconds;
 	}
 
@@ -51,40 +51,43 @@ class github_api {
 
 	/**
 	 * If you find yourself hitting rate limits, then you can register an application
-	 * with GitHub (http://developer.github.com/v3/oauth/) use the filters here to
+	 * with GitHub(http://developer.github.com/v3/oauth/) use the filters here to
 	 * provide the credentials.
 	 */
-	public function set_credentials () {
+	public function set_credentials() {
 
-		$this->client_id = apply_filters ( 'github-embed-client-id', $this->client_id );
-		$this->client_secret = apply_filters ( 'github-embed-client-secret', $this->client_id );
+		$this->client_id = apply_filters( 'github-embed-client-id', $this->client_id );
+		$this->client_secret = apply_filters( 'github-embed-client-secret', $this->client_id );
 
 	}
 
 
 
-	private function call_api ( $url ) {
+	private function call_api( $url ) {
 
 		// Allow users to supply auth details to enable a higher rate limit
-		if ( ! empty ( $this->client_id ) && ! empty ( $this->client_secret ) ) {
-			$url = add_query_arg(array ( 'client_id' => $this->client_id,
-			                     		 'client_secret' => $this->client_secret),
-								$url );
+		if ( ! empty( $this->client_id ) && ! empty( $this->client_secret ) ) {
+			$url = add_query_arg(
+			                     array(
+			                           'client_id' => $this->client_id,
+			                     	   'client_secret' => $this->client_secret ),
+								$url
+								);
 		}
 
-		$args = array ( 'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed');
-		
-		$this->log ( __FUNCTION__." : $url", GEDEBUG_CALL );
+		$args = array( 'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed');
 
-		$results = wp_remote_get ( $url, $args );
+		$this->log( __FUNCTION__." : $url", GEDEBUG_CALL );
 
-		$this->log ( __FUNCTION__." : ".print_r($results,1), GEDEBUG_RESP );
+		$results = wp_remote_get( $url, $args );
 
-		if ( is_wp_error( $results ) ||
-		    ! isset ( $results['response']['code'] ) ||
+		$this->log( __FUNCTION__ . " : " . print_r( $results,1 ), GEDEBUG_RESP );
+
+		if( is_wp_error( $results ) ||
+		    ! isset( $results['response']['code'] ) ||
 		    $results['response']['code'] != '200' ) {
-			header ( 'HTTP/1.0 404 Not Found' );
-			die ( 'Octocat is lost, and afraid' );
+			header( 'HTTP/1.0 404 Not Found' );
+			die( 'Octocat is lost, and afraid' );
 		}
 
 		return $results;
@@ -99,16 +102,16 @@ class github_api {
 	 * @param  string $repository The respository name
 	 * @return object             The response from the GitHub API
 	 */
-	public function get_repo ( $owner, $repository ) {
+	public function get_repo( $owner, $repository ) {
 
-		$this->log ( "get_repo ( $owner, $repository )", GEDEBUG_CALL );
+		$this->log( "get_repo( $owner, $repository )", GEDEBUG_CALL );
 
-		$owner = trim ( $owner, '/' );
-		$repository = trim ( $repository, '/' );
+		$owner = trim( $owner, '/' );
+		$repository = trim( $repository, '/' );
 
-		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository" );
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository" );
 
-		return json_decode ( $results['body'] );
+		return json_decode( $results['body'] );
 
 	}
 
@@ -120,16 +123,16 @@ class github_api {
 	 * @param  string $repository The respository name
 	 * @return object             The response from the GitHub API
 	 */
-	public function get_repo_commits ( $owner, $repository ) {
+	public function get_repo_commits( $owner, $repository ) {
 
-		$this->log ( "get_repo_commits ( $owner, $repository )", GEDEBUG_CALL );
+		$this->log( "get_repo_commits( $owner, $repository )", GEDEBUG_CALL );
 
-		$owner = trim ( $owner, '/' );
-		$repository = trim ( $repository, '/' );
+		$owner = trim( $owner, '/' );
+		$repository = trim( $repository, '/' );
 
-		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository/commits" );
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/commits" );
 
-		return json_decode ( $results['body'] );
+		return json_decode( $results['body'] );
 
 	}
 
@@ -142,31 +145,31 @@ class github_api {
 	 * @param  string $milestone  The milestone ID
 	 * @return object             The response from the GitHub API
 	 */
-	public function get_repo_milestone_summary ( $owner, $repository, $milestone ) {
+	public function get_repo_milestone_summary( $owner, $repository, $milestone ) {
 
-		$this->log ( "get_repo_milestone_summary ( $owner, $repository, $milestone )", GEDEBUG_CALL );
+		$this->log( "get_repo_milestone_summary( $owner, $repository, $milestone )", GEDEBUG_CALL );
 
-		$owner = trim ( $owner, '/' );
-		$repo = trim ( $repo, '/' );
+		$owner = trim( $owner, '/' );
+		$repo = trim( $repo, '/' );
 
-		$results = $this->call_api ( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
 
-		return json_decode ( $results['body'] );
+		return json_decode( $results['body'] );
 
 	}
 
 
 
-	public function get_repo_contributors ( $owner, $repository ) {
+	public function get_repo_contributors( $owner, $repository ) {
 
-		$this->log ( "get_repo_contributors ( $owner, $repository )", GEDEBUG_CALL );
+		$this->log( "get_repo_contributors( $owner, $repository )", GEDEBUG_CALL );
 
-		$owner = trim ( $owner, '/' );
-		$repo = trim ( $repo, '/' );
+		$owner = trim( $owner, '/' );
+		$repo = trim( $repository, '/' );
 
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/collaborators" );
 
-		return json_decode ( $results['body'] );
+		return json_decode( $results['body'] );
 
 	}
 
@@ -177,24 +180,24 @@ class github_api {
 	 * @param  string $user       The username
 	 * @return object             The response from the GitHub API
 	 */
-	public function get_user ( $user ) {
+	public function get_user( $user ) {
 
-		$this->log ( "get_user ( $user )", GEDEBUG_CALL );
+		$this->log( "get_user( $user )", GEDEBUG_CALL );
 
-		$user = trim ( $user, '/' );
-		$repository = trim ( $repository, '/' );
+		$user = trim( $user, '/' );
+		$repository = trim( $repository, '/' );
 
-		$results = $this->call_api ( "https://api.github.com/users/$user" );
+		$results = $this->call_api( "https://api.github.com/users/$user" );
 
-		return json_decode ( $results['body'] );
+		return json_decode( $results['body'] );
 
 	}
-	
 
 
-	private function log ( $msg, $level ) {
+
+	private function log( $msg, $level ) {
 		if ( GITHUB_API_LEVEL >= $level ) {
-			error_log ( "[GE$level]: ".$msg );
+			error_log( "[GE$level]: ".$msg );
 		}
 	}
 
