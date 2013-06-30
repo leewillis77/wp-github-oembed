@@ -185,7 +185,6 @@ class github_api {
 		$this->log( "get_user( $user )", GEDEBUG_CALL );
 
 		$user = trim( $user, '/' );
-		$repository = trim( $repository, '/' );
 
 		$results = $this->call_api( "https://api.github.com/users/$user" );
 
