@@ -12,7 +12,7 @@ define( 'GEDEBUG_CALL', 1 );
 define( 'GEDEBUG_RESP', 2 );
 
 // Selected debug level
-define( 'GITHUB_API_LEVEL', GEDEBUG_RESP );
+define( 'GITHUB_API_LEVEL', GEDEBUG_NONE );
 
 
 /**
