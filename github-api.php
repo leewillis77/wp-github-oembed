@@ -167,7 +167,7 @@ class github_api {
 		$owner = trim( $owner, '/' );
 		$repo = trim( $repository, '/' );
 
-		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/collaborators" );
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/stats/contributors" );
 
 		return json_decode( $results['body'] );
 

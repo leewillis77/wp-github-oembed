@@ -252,16 +252,12 @@ class github_embed {
 
 		foreach ( $contributors as $contributor ) {
 
-			$details = $this->api->get_user ($contributor->login);
 			$response->html .= '<li class="github-repo-contributor">';
 			$response->html .= '<img class="github-repo-contributor-avatar" src="';
-			$response->html .= esc_url(add_query_arg(array('s'=>$gravatar_size), $contributor->avatar_url));
-			$response->html .= '" alt="Picture of '.esc_attr($contributor->login).'">';
-			if ( ! empty ( $details->name ) ) {
-				$response->html .= '<span class="github-repo-contributor-name">'.esc_html($details->name)."</span><br>";
-			}
+			$response->html .= esc_url(add_query_arg(array('s'=>$gravatar_size), $contributor->author->avatar_url));
+			$response->html .= '" alt="Picture of '.esc_attr($contributor->author->login).'">';
 			$response->html .= '<span class="github-repo-contributor-login">';
-			$response->html .= '<a href="https://github.com/'.esc_attr($contributor->login).'">'.esc_attr($contributor->login).'</a></span>';
+			$response->html .= '<a href="https://github.com/'.esc_attr($contributor->author->login).'">'.esc_attr($contributor->author->login).'</a></span>';
 		}
 
 		$response->html .= '</ul>';
