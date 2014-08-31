@@ -41,6 +41,11 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 ## Changelog
 
+- 1.4
+   - Fix PHP warning that could block contributor embeds.
+   - Fix Contributor embeds to use correct API call
+   - Pass correct initial value to credentials filters
+
 - 1.3
     - Expire the oEmbed cache daily
 
