@@ -57,7 +57,7 @@ class github_api {
 	public function set_credentials() {
 
 		$this->client_id = apply_filters( 'github-embed-client-id', $this->client_id );
-		$this->client_secret = apply_filters( 'github-embed-client-secret', $this->client_id );
+		$this->client_secret = apply_filters( 'github-embed-client-secret', $this->client_secret );
 
 	}
 
