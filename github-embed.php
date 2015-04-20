@@ -53,11 +53,11 @@ class github_embed {
 
 		$this->api = $api;
 
-		add_action ( 'init', array ( $this, 'register_oembed_handler' ) );
-		add_action ( 'init', array ( $this, 'maybe_handle_oembed' ) );
-		add_action ( 'wp_enqueue_scripts', array ( $this, 'enqueue_styles' ) );
-        add_action ( 'admin_init', array ( $this, 'schedule_expiry' ) );
-        add_action ( 'github_embed_cron', array ( $this, 'cron' ) );
+		add_action( 'init', array ( $this, 'register_oembed_handler' ) );
+		add_action( 'init', array( $this, 'maybe_handle_oembed' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'admin_init', array( $this, 'schedule_expiry' ) );
+		add_action( 'github_embed_cron', array( $this, 'cron' ) );
 
 		// @TODO i18n
 
@@ -65,37 +65,37 @@ class github_embed {
 
 
 
-    /**
-     * Make sure we have a scheduled event set to clear down the oEmbed cache until
-     * WordPress supports cache_age in oEmbed responses.
-     */
-    function schedule_expiry() {
+	/**
+	 * Make sure we have a scheduled event set to clear down the oEmbed cache until
+	 * WordPress supports cache_age in oEmbed responses.
+	 */
+	function schedule_expiry() {
 
-        if( ! wp_next_scheduled( 'github_embed_cron' ) ) {
-            $frequency = apply_filters ( 'github_embed_cache_frequency', 'daily' );
-           wp_schedule_event( time(), $frequency, 'github_embed_cron' );
-        }
+		if( ! wp_next_scheduled( 'github_embed_cron' ) ) {
+			$frequency = apply_filters ( 'github_embed_cache_frequency', 'daily' );
+		   wp_schedule_event( time(), $frequency, 'github_embed_cron' );
+		}
 
-    }
+	}
 
 
 
-    /**
-     * Expire old oEmbeds.
-     * Note: This is a bit sledgehammer-to-crack-a-nut hence why I'm only running it
-     * daily. Ideally WP should honour cache_age in oEmbed responses properly
-     */
-    function cron() {
+	/**
+	 * Expire old oEmbeds.
+	 * Note: This is a bit sledgehammer-to-crack-a-nut hence why I'm only running it
+	 * daily. Ideally WP should honour cache_age in oEmbed responses properly
+	 */
+	function cron() {
 
-        global $wpdb, $table_prefix;
+		global $wpdb, $table_prefix;
 
-        $sql = "DELETE
-                  FROM {$table_prefix}postmeta
-                 WHERE meta_key LIKE '_oembed_%'";
+		$sql = "DELETE
+				  FROM {$table_prefix}postmeta
+				 WHERE meta_key LIKE '_oembed_%'";
 
-        $results = $wpdb->get_results ( $sql );
+		$results = $wpdb->get_results ( $sql );
 
-    }
+	}
 
 
 
@@ -106,7 +106,7 @@ class github_embed {
 	function enqueue_styles() {
 
 		wp_register_style ( 'github-embed', plugins_url(basename(dirname(__FILE__)).'/css/github-embed.css' ) );
-        wp_enqueue_style ( 'github-embed' );
+		wp_enqueue_style ( 'github-embed' );
 
 	}
 
@@ -121,10 +121,10 @@ class github_embed {
 	 */
 	public function register_oembed_handler() {
 
-		$oembed_url = home_url ();
+		$oembed_url = home_url();
 		$key = $this->get_key();
-		$oembed_url = add_query_arg ( array ( 'github_oembed' => $key ), $oembed_url);
-		wp_oembed_add_provider ( '#https?://github.com/.*#i', $oembed_url, true );
+		$oembed_url = add_query_arg( array( 'github_oembed' => $key ), $oembed_url );
+		wp_oembed_add_provider( '#https?://github.com/.*#i', $oembed_url, true );
 
 	}
 
@@ -172,7 +172,7 @@ class github_embed {
 
 		// Check this request is valid
 		if ( $_GET['github_oembed'] != $this->get_key() ) {
-            header ( 'HTTP/1.0 403 Forbidden' );
+			header ( 'HTTP/1.0 403 Forbidden' );
 			die ( 'Sad Octocat is sad.' );
 		}
 
