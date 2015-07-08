@@ -338,6 +338,7 @@ class github_embed {
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
 		$response->html .= esc_html ( number_format_i18n ( $repo->forks_count ) )." forks.<br/>";
+		$response->html .= esc_html ( number_format_i18n ( $repo->stargazers_count ) )." stars.<br/>";
 		$response->html .= esc_html ( number_format_i18n ( $repo->open_issues_count ) )." open issues.<br/>";
 
 		if ( count ( $commits ) ) {
