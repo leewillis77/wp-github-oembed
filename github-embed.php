@@ -337,9 +337,9 @@ class github_embed {
 		$response->html = '<div class="github-embed github-embed-repository">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
-		$response->html .= esc_html ( number_format_i18n ( $repo->forks_count ) )." forks.<br/>";
-		$response->html .= esc_html ( number_format_i18n ( $repo->stargazers_count ) )." stars.<br/>";
-		$response->html .= esc_html ( number_format_i18n ( $repo->open_issues_count ) )." open issues.<br/>";
+		$response->html .= '<a href="'.esc_attr($repo->html_url).'/network" target="_blank">'.esc_html ( number_format_i18n ( $repo->forks_count ) )."</a> forks.<br/>";
+		$response->html .= '<a href="'.esc_attr($repo->html_url).'/stargezers" target="_blank">'.esc_html ( number_format_i18n ( $repo->stargazers_count ) )."</a> stars.<br/>";
+		$response->html .= '<a href="'.esc_attr($repo->html_url).'/issues" target="_blank">'.esc_html ( number_format_i18n ( $repo->open_issues_count ) )."</a> open issues.<br/>";
 
 		if ( count ( $commits ) ) {
 
