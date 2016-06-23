@@ -325,6 +325,7 @@ class github_embed {
 
 		$repo = $this->api->get_repo ( $owner, $repository );
 		$commits =$this->api->get_repo_commits ( $owner, $repository );
+		$releases = $this->api->get_repo_releases ( $owner, $repository );
 
 		$response = new stdClass();
 		$response->type = 'rich';
@@ -337,6 +338,24 @@ class github_embed {
 		$response->html = '<div class="github-embed github-embed-repository">';
 		$response->html .= '<p><a href="'.esc_attr($repo->html_url).'" target="_blank"><strong>'.esc_html($repo->description)."</strong></a><br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url).'" target="_blank">'.esc_html($repo->html_url)."</a><br/>";
+		
+		
+		/*
+		 * Show the latest release if one exists, otherwise show Latest release: none.
+		 */
+		if ( $releases == null )
+		{
+			$response->html .= "Latest release: none<br />";
+		}
+		else
+		{
+			$latest_release = $this->api->get_repo_releases_latest ( $owner, $repository );
+			$latest_release_url = $latest_release->html_url;
+			$latest_release_tag = $latest_release->tag_name;
+			$response->html .= 'Latest release: <a href="' . $latest_release_url . '" target="_blank">' . 
+				$latest_release_tag . '</a><br />';
+		}
+		
 		$response->html .= '<a href="'.esc_attr($repo->html_url . '/network') . '" target="_blank">'.esc_html ( number_format_i18n ( $repo->forks_count ) ) . "</a> forks.<br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url . '/stargazers') . '" target="_blank">'.esc_html ( number_format_i18n ( $repo->stargazers_count ) ) . "</a> stars.<br/>";
 		$response->html .= '<a href="'.esc_attr($repo->html_url . '/issues') . '" target="_blank">'.esc_html ( number_format_i18n ( $repo->open_issues_count ) ) . "</a> open issues.<br/>";
