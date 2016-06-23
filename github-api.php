@@ -174,6 +174,47 @@ class github_api {
 	}
 
 
+	
+	/**
+	 * Get release information for repository, used to determine if any releases exist
+	 * @param  string $owner      The repository's owner
+	 * @param  string $repository The respository name
+	 * @return object             The response from the GitHub API
+	 */
+	public function get_repo_releases( $owner, $repository ) {
+
+		$this->log( "get_repo_releases( $owner, $repository )", GEDEBUG_CALL );
+
+		$owner = trim( $owner, '/' );
+		$repo = trim( $repository, '/' );
+
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repo/releases" );
+
+		return json_decode( $results['body'] );
+
+	}
+	
+	
+	/**
+	 * Get latest release information for repository.
+	 * @param  string $owner      The repository's owner
+	 * @param  string $repository The respository name
+	 * @return object             The response from the GitHub API
+	 */
+	public function get_repo_releases_latest( $owner, $repository ) {
+
+		$this->log( "get_repo_releases_latest( $owner, $repository )", GEDEBUG_CALL );
+
+		$owner = trim( $owner, '/' );
+		$repo = trim( $repository, '/' );
+
+		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/releases/latest" );
+
+		return json_decode( $results['body'] );
+
+	}
+
+
 
 	/**
 	 * Get a user from the GitHub API
