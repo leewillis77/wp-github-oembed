@@ -4,7 +4,7 @@
 Plugin Name: Github Embed
 Plugin URI: http://www.leewillis.co.uk/wordpress-plugins
 Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
-Version: 1.4
+Version: 1.5
 Author: Lee Willis
 Author URI: http://www.leewillis.co.uk/
 */

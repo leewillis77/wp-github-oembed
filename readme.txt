@@ -3,8 +3,8 @@ Contributors: leewillis77
 Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&utm_medium=www&utm_campaign=github-embed
 Tags: github, embed, oembed
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 1.4
+Tested up to: 4.7.2
+Stable tag: 1.5
 
 == Description ==
 
@@ -42,6 +42,10 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 4. Project contributors
 
 == Changelog ==
+
+= 1.5 =
+
+* Fixes for newer GitHub milestone URLs
 
 = 1.4 =
 
