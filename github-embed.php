@@ -314,6 +314,7 @@ class github_embed {
 		$response->html .= '<p class="github-milestone-description">'.nl2br(esc_html($summary->description))."</p><br>";
 		$response->html .= '</div>';
 
+		error_log( basename( __FILE__ ) . ': (' . __LINE__ . ') : response is ' . print_r( $response, 1 ) );
 		header ( 'Content-Type: application/json' );
 		echo json_encode ( $response );
 		die();
