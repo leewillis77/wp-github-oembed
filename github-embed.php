@@ -207,6 +207,11 @@ class github_embed {
 				$this->oembed_github_repo_milestone_summary ( $matches[1], $matches[2], $milestone );
 			}
 
+		// New style milestone URL, e.g. https://github.com/example/example/milestone/1
+		} elseif ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/milestone/([0-9]*)$#i', $url, $matches ) ) {
+
+			$this->oembed_github_repo_milestone_summary( $matches[1], $matches[2], $matches[3] );
+
 		// Repository
 		} elseif ( preg_match ( '#https?://github.com/([^/]*)/([^/]*)/?$#i', $url, $matches ) && ! empty ( $matches[2] ) ) {
 

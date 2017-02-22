@@ -150,7 +150,7 @@ class github_api {
 		$this->log( "get_repo_milestone_summary( $owner, $repository, $milestone )", GEDEBUG_CALL );
 
 		$owner = trim( $owner, '/' );
-		$repo = trim( $repo, '/' );
+		$repo = trim( $repository, '/' );
 
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
 
