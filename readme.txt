@@ -3,7 +3,7 @@ Contributors: leewillis77
 Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&utm_medium=www&utm_campaign=github-embed
 Tags: github, embed, oembed
 Requires at least: 3.5
-Tested up to: 4.7.2
+Tested up to: 4.8
 Stable tag: 1.5
 
 == Description ==
