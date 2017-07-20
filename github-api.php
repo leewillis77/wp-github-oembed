@@ -2,17 +2,19 @@
 
 
 
-// 0 - none
+// 0 - none.
 define( 'GEDEBUG_NONE', 0 );
 
-// 1 - call logging only
+// 1 - call logging only.
 define( 'GEDEBUG_CALL', 1 );
 
-// 2 - calls, and responses
+// 2 - calls, and responses.
 define( 'GEDEBUG_RESP', 2 );
 
-// Selected debug level
-define( 'GITHUB_API_LEVEL', GEDEBUG_NONE );
+// Selected debug level.
+if ( ! defined( 'GITHUB_API_LEVEL' ) ) {
+	define( 'GITHUB_API_LEVEL', GEDEBUG_NONE );
+}
 
 
 /**
