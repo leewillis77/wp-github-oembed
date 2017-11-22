@@ -12,8 +12,8 @@ Author URI: http://www.leewillis.co.uk/
 /**
  * Copyright (c) 2013 Lee Willis. All rights reserved.
  *
- * Released under the GPL license
- * http://www.opensource.org/licenses/gpl-license.php
+ * Released under the GPL license v2
+ * https://www.gnu.org/licenses/gpl-2.0.en.html
  *
  * This is an add-on for WordPress
  * http://wordpress.org/
