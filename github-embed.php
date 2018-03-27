@@ -273,33 +273,23 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $repo->description;
 
-		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-repository">';
-		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank"><strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url ) . '" target="_blank">' . esc_html( $repo->html_url ) . '</a><br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/network' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->forks_count ) ) . '</a> forks.<br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/stargazers' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->stargazers_count ) ) . '</a> stars.<br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/issues' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->open_issues_count ) ) . '</a> open issues.<br/>';
-
-		if ( count( $commits ) ) {
-			$cnt = 0;
-			$response->html .= 'Recent commits:';
-			$response->html .= '<ul class="github_commits">';
-			foreach ( $commits as $commit ) {
-				if ( $cnt > 4 ) {
-					break;
-				}
-				$response->html .= '<li class="github_commit">';
-				$response->html .= '<a href="https://github.com/' . $owner . '/' . $repository . '/commit/' . esc_attr( $commit->sha ) . '" target="_blank">' . esc_html( $commit->commit->message ) . '</a>, ';
-				$response->html .= esc_html( $commit->commit->committer->name );
-				$response->html .= '</li>';
-				$cnt++;
-			}
-			$response->html .= '</ul>';
-		}
-		$response->html .= '</p>';
-		$response->html .= '</div>';
-		header( 'Content-Type: application/json' );
+                // Include template file
+                // @TODO: there should be an option to select different templates!
+                $includepath = plugin_dir_path( __FILE__ ) . 'templates/repo_default.php';
+                
+                // Start rendering
+		ob_start();
+		// Include the recipe template file:
+                include( $includepath );
+		// and render the content using that file:
+		$content = ob_get_contents();
+		// Finish rendering
+		ob_end_clean();
+		
+                // Add to response opbject
+                $response->html = $content;
+		
+                header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
 	}
