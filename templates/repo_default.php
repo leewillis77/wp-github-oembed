@@ -73,10 +73,5 @@
         </div>
       </div>
     </div>
-    
-
-<?php //echo "<pre>"; ?>
-<?php //var_dump($repo); ?>
-<?php //echo "</pre>"; ?>
 </div>
 
