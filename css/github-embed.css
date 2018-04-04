@@ -24,58 +24,58 @@ li.github-repo-contributor {
 	margin-bottom: 0.5em;
 }
 
-.github-embed-repository{
+
+.github-oembed-repository{
     padding-top: 16px!important;
     padding-bottom: 16px!important;
     border-bottom: 1px #e1e4e8 solid !important
 }
-.d-flex{
+.github-oembed-container{
     display: flex;
 }
-.d-block{
+
+.github-oembed-avatar-block{
     display: block;
-}
-.d-inline-block{
-    display: inline-block;
-}
-.mr-3{
     margin-right: 16px;
-}
-.mt-1{
     margin-top:4px;
 }
-.mb-1{
-    margin-bottom:4px;
-}
-.mb-1{
-    margin-bottom:8px;
-}
-.pr-4{
-    padding-right: 24px;
-}
-.f6{
-    font-size:80%;
-}
-.text-gray{
-    color: #586069;
-}
-.d-flex a.muted-link{
-    text-decoration: none;
-    color: #586069 !important;
-}
-.avatar{
+.github-oembed-avatar{
     display: inline-block;
     overflow: hidden;
     line-height: 1;
     vertical-align: middle;
     border-radius: 3px;
 }
-.octicon {
+.github-oembed-title-block{
     display: inline-block;
-    vertical-align: text-bottom;
-    fill: currentColor;
+    margin-bottom:8px;
 }
-.repo-language-color {
+.github-oembed-forkedfrom{
+    font-size:80%;
+    color: #586069;
+    margin-bottom:4px;
+}
+
+.github-oembed-description{
+    color: #586069;
+    margin-bottom:8px;
+    padding-right: 24px;
+}
+
+.github-oembed-details-block{
+    font-size:80%;
+    margin-top:4px;
+    color: #586069;
+}
+.github-oembed-detail-label{
+    margin-right: 16px;
+}
+.github-oembed-details-block a.github-oembed-detail-link{
+    text-decoration: none;
+    color: #586069 !important;
+}
+
+.github-oembed-repo-language{
     position: relative;
     top: 1px;
     display: inline-block;
@@ -83,6 +83,14 @@ li.github-repo-contributor {
     height: 12px;
     border-radius: 50%;
 }
+
+.github-oembed-detail-icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    fill: currentColor;
+}
+
+/* This list is probably not complete yet */
 .repo-language-color.lang_php{
     background-color: #4F5D95;
 }
