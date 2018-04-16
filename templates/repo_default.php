@@ -1,13 +1,13 @@
 <?php
 
-/* 
+/*
  * Default template for github repositiories
  */
 // @TODO: Add microdata!
 // @TODO add relative time formats for the "Updated" string
 ?>
-<div class="github-oembed github-embed-repository">
-    
+<div class="github-oembed github-oembed-repository">
+
 
     <!-- Container with all the info -->
     <div class="github-oembed-container">
@@ -21,7 +21,7 @@
           <h3>
             <a href="<?php echo $repo->html_url; ?>">
               <span class="github-oembed-title-owner"><?php echo $owner; ?></span>/<span class="github-oembed-title-repo"><?php echo $repository; ?></span>
-            </a>          
+            </a>
           </h3>
         </div>
 
@@ -30,14 +30,17 @@
               Forked from <a href="<?php echo $repo->parent->html_url?>"><?php echo $repo->parent->full_name; ?></a>
             </span>
         <?php } ?>
-        
+
         <!-- Description -->
         <p class="github-oembed-description"><?php echo esc_html( $repo->description ); ?></p>
 
         <!-- Details -->
         <div class="github-oembed-details-block">
+            <?php if( $repo->language != '' ) { ?>
               <span class="github-oembed-repo-language lang_<?php echo strtolower(esc_attr($repo->language)); ?>"></span>
-            <span class="github-oembed-detail-label" ><?php echo esc_attr( $repo->language ); ?> </span>
+              <span class="github-oembed-detail-label" ><?php echo esc_attr( $repo->language ); ?> </span>
+            <?php } ?>
+
             <?php if( $repo->stargazers_count > 0) { ?>
             <a class="github-oembed-detail-link github-oembed-detail-label" href="<?php esc_url( $repo->stargazers_url ); ?>">
               <svg aria-label="star" class="github-oembed-detail-icon .github-oembed-detail-icon-star" viewBox="0 0 14 16" version="1.1" width="14" height="16" role="img"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z"></path></svg>
@@ -74,4 +77,3 @@
       </div>
     </div>
 </div>
-

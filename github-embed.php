@@ -273,23 +273,25 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $repo->description;
 
-                // Include template file
-                // @TODO: there should be an option to select different templates!
-                $includepath = plugin_dir_path( __FILE__ ) . 'templates/repo_default.php';
-                
-                // Start rendering
+    // Include template file
+    // @TODO: there should be an option to select different templates!
+		if( locate_template('github-oembed-repo.php') ){
+			$includepath = locate_template('github-oembed-repo.php');
+		} else {
+			$includepath = plugin_dir_path( __FILE__ ) . 'templates/repo_default.php';
+		}
+
 		ob_start();
-		// Include the recipe template file:
-                include( $includepath );
+    // Include the recipe template file:
+    include( $includepath );
 		// and render the content using that file:
+
 		$content = ob_get_contents();
-		// Finish rendering
 		ob_end_clean();
-		
-                // Add to response opbject
-                $response->html = $content;
-		
-                header( 'Content-Type: application/json' );
+    // Add to response opbject
+    $response->html = $content;
+
+    header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
 	}

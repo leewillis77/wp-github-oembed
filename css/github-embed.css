@@ -91,21 +91,21 @@ li.github-repo-contributor {
 }
 
 /* This list is probably not complete yet */
-.repo-language-color.lang_php{
+.github-oembed-repo-language.lang_php{
     background-color: #4F5D95;
 }
-.repo-language-color.lang_css{
+.github-oembed-repo-language.lang_css{
     background-color: #563d7c;
 }
-.repo-language-color.lang_js{
+.github-oembed-repo-language.lang_javascript{
     background-color: #f1e05a;
 }
-.repo-language-color.lang_python{
+.github-oembed-repo-language.lang_python{
     background-color: #3572A5;
 }
-.repo-language-color.lang_tex{
+.github-oembed-repo-language.lang_tex{
     background-color: #3D6117;
 }
-.repo-language-color.lang_shell{
+.github-oembed-repo-language.lang_shell{
     background-color: #89e051;
 }
