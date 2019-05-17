@@ -3,8 +3,8 @@ Contributors: leewillis77
 Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&utm_medium=www&utm_campaign=github-embed
 Tags: github, embed, oembed
 Requires at least: 4.6
-Tested up to: 5.1
-Stable tag: 1.6
+Tested up to: 5.2
+Stable tag: 1.7
 
 == Description ==
 
@@ -42,6 +42,11 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 4. Project contributors
 
 == Changelog ==
+
+= 1.7 =
+
+* Include GitHub logo rather than hotlinking to (no-longer supported) repo for image
+* Add wp_github_oembed_logo_class filter
 
 = 1.6 =
 
