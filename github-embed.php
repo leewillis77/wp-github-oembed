@@ -195,7 +195,8 @@ class github_embed {
 		$gravatar_size = apply_filters( 'github_oembed_gravatar_size', 64 );
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-repo-contributors">';
+		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$response->html = '<div class="github-embed github-embed-repo-contributors ' . $logo_class . '">';
 		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank">';
 		$response->html .= '<strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
 		$response->html .= '<span class="github-heading">Contributors: </span>';
@@ -232,7 +233,8 @@ class github_embed {
 		$response->title = $repo->description;
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-milestone-summary">';
+		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$response->html = '<div class="github-embed github-embed-milestone-summary ' . $logo_class . '">';
 		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank"><strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
 
 		$response->html .= '<span class="github-heading">Milestone: </span>';
@@ -274,7 +276,8 @@ class github_embed {
 		$response->title = $repo->description;
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-repository">';
+		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
+		$response->html = '<div class="github-embed github-embed-repository ' . $logo_class . '">';
 		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank"><strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
 		$response->html .= '<a href="' . esc_attr( $repo->html_url ) . '" target="_blank">' . esc_html( $repo->html_url ) . '</a><br/>';
 		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/network' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->forks_count ) ) . '</a> forks.<br/>';
@@ -320,7 +323,8 @@ class github_embed {
 		$response->title = $owner_info->name;
 
 		// @TODO This should all be templated
-		$response->html = '<div class="github-embed github-embed-user">';
+		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$response->html = '<div class="github-embed github-embed-user ' . $logo_class . '">';
 		$response->html .= '<p><a href="https://github.com/' . esc_attr( $owner ) . '" target="_blank"><strong>' . esc_html( $owner ) . '</strong></a><br/>';
 		$response->html .= esc_html( number_format_i18n( $owner_info->public_repos ) ) . ' repositories, ';
 		$response->html .= esc_html( number_format_i18n( $owner_info->followers ) ) . ' followers.</p>';
