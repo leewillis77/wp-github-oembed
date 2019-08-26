@@ -176,41 +176,39 @@ class github_embed {
 	}
 
 	/**
+	 * Capture then return output of template, provided theme or fallback to plugin default
+	 * @param  string $template   The template name to process
+	 * @param  string $data       Array, object, or variable that the template needs
+	 */
+	private function process_template( $template, $data ) {
+		ob_start();
+		if ( ! locate_template($template, true) ) {
+			require_once $template;
+		}
+		return ob_get_clean();
+	}
+
+	/**
 	 * Retrieve a list of contributors for a project
 	 * @param  string $owner      The owner of the repository
 	 * @param  string $repository The repository name
 	 */
 	private function oembed_github_repo_contributors( $owner, $repository ) {
-		$repo = $this->api->get_repo( $owner, $repository );
-		$contributors = $this->api->get_repo_contributors( $owner, $repository );
+		$data = [];
+		$data['repo'] = $this->api->get_repo( $owner, $repository );
+		$data['contributors'] = $this->api->get_repo_contributors( $owner, $repository );
+		$data['gravatar_size'] = apply_filters( 'github_oembed_gravatar_size', 64 );
+		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
 
 		$response = new stdClass();
 		$response->type = 'rich';
 		$response->width = '10';
 		$response->height = '10';
 		$response->version = '1.0';
-		$response->title = $repo->description;
+		$response->title = $data['repo']->description;
+		$response->html = $this->process_template(
+			'templates/oembed_github_repo_contributors.view.php', $data);
 
-		$gravatar_size = apply_filters( 'github_oembed_gravatar_size', 64 );
-
-		// @TODO This should all be templated
-		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
-		$response->html = '<div class="github-embed github-embed-repo-contributors ' . $logo_class . '">';
-		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank">';
-		$response->html .= '<strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
-		$response->html .= '<span class="github-heading">Contributors: </span>';
-		$response->html .= '<ul class="github-repo-contributors">';
-		foreach ( $contributors as $contributor ) {
-			$response->html .= '<li class="github-repo-contributor">';
-			$response->html .= '<img class="github-repo-contributor-avatar" src="';
-			$response->html .= esc_url( add_query_arg( array( 's' => $gravatar_size ), $contributor->author->avatar_url ) );
-			$response->html .= '" alt="Picture of ' . esc_attr( $contributor->author->login ) . '">';
-			$response->html .= '<span class="github-repo-contributor-login">';
-			$response->html .= '<a href="https://github.com/' . esc_attr( $contributor->author->login ) . '">' . esc_attr( $contributor->author->login ) . '</a></span>';
-		}
-		$response->html .= '</ul>';
-		$response->html .= '<div style="clear: both;"></div>';
-		$response->html .= '</div>';
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -221,37 +219,19 @@ class github_embed {
 	 * output it as an oembed response
 	 */
 	private function oembed_github_repo_milestone_summary( $owner, $repository, $milestone ) {
-		$repo = $this->api->get_repo( $owner, $repository );
-		$summary = $this->api->get_repo_milestone_summary( $owner, $repository, $milestone );
+		$data = [];
+		$data['repo'] = $this->api->get_repo( $owner, $repository );
+		$data['summary'] = $this->api->get_repo_milestone_summary( $owner, $repository, $milestone );
+		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
 
 		$response = new stdClass();
 		$response->type = 'rich';
 		$response->width = '10';
 		$response->height = '10';
 		$response->version = '1.0';
-		$response->title = $repo->description;
-
-		// @TODO This should all be templated
-		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
-		$response->html = '<div class="github-embed github-embed-milestone-summary ' . $logo_class . '">';
-		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank"><strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
-
-		$response->html .= '<span class="github-heading">Milestone: </span>';
-		$response->html .= '<span class="github-milestone-title">' . esc_html( $summary->title ) . '</span><br>';
-
-		$response->html .= '<span class="github-heading">Issues: </span>';
-		$response->html .= '<span class="github-milestone-issues">';
-		$response->html .= esc_html( number_format_i18n( $summary->open_issues ) ) . ' open, ';
-		$response->html .= esc_html( number_format_i18n( $summary->closed_issues ) ) . ' closed.</span><br>';
-
-		if ( ! empty( $summary->due_on ) ) {
-			$response->html .= '<span class="github-heading">Due: </span>';
-			$due_date = date_format( date_create( $summary->due_on ), 'jS F Y' );
-			$response->html .= '<span class="github-milestone-due-date">' . esc_html( $due_date ) . '</span><br>';
-		}
-
-		$response->html .= '<p class="github-milestone-description">' . nl2br( esc_html( $summary->description ) ) . '</p><br>';
-		$response->html .= '</div>';
+		$response->title = $data['repo']->description;
+		$response->html = $this->process_template(
+			'templates/oembed_github_repo_milestone_summary.view.php', $data);
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -264,43 +244,24 @@ class github_embed {
 	 * output it as an oembed response
 	 */
 	private function oembed_github_repo ( $owner, $repository ) {
-		$repo = $this->api->get_repo( $owner, $repository );
-		$commits =$this->api->get_repo_commits( $owner, $repository );
+		$data = [
+			$owner,
+			$repository,
+		];
+		$data['repo'] = $this->api->get_repo( $owner, $repository );
+		$data['commits'] = $this->api->get_repo_commits( $owner, $repository );
+		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
 
 		$response = new stdClass();
 		$response->type = 'rich';
 		$response->width = '10';
 		$response->height = '10';
 		$response->version = '1.0';
-		$response->title = $repo->description;
+		$response->title = $data['repo']->description;
+		$response->html = $this->process_template(
+			'templates/oembed_github_repo.view.php', $data);
 
-		// @TODO This should all be templated
-		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
-		$response->html = '<div class="github-embed github-embed-repository ' . $logo_class . '">';
-		$response->html .= '<p><a href="' . esc_attr( $repo->html_url ) . '" target="_blank"><strong>' . esc_html( $repo->description ) . '</strong></a><br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url ) . '" target="_blank">' . esc_html( $repo->html_url ) . '</a><br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/network' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->forks_count ) ) . '</a> forks.<br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/stargazers' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->stargazers_count ) ) . '</a> stars.<br/>';
-		$response->html .= '<a href="' . esc_attr( $repo->html_url . '/issues' ) . '" target="_blank">' . esc_html( number_format_i18n( $repo->open_issues_count ) ) . '</a> open issues.<br/>';
 
-		if ( count( $commits ) ) {
-			$cnt = 0;
-			$response->html .= 'Recent commits:';
-			$response->html .= '<ul class="github_commits">';
-			foreach ( $commits as $commit ) {
-				if ( $cnt > 4 ) {
-					break;
-				}
-				$response->html .= '<li class="github_commit">';
-				$response->html .= '<a href="https://github.com/' . $owner . '/' . $repository . '/commit/' . esc_attr( $commit->sha ) . '" target="_blank">' . esc_html( $commit->commit->message ) . '</a>, ';
-				$response->html .= esc_html( $commit->commit->committer->name );
-				$response->html .= '</li>';
-				$cnt++;
-			}
-			$response->html .= '</ul>';
-		}
-		$response->html .= '</p>';
-		$response->html .= '</div>';
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -311,23 +272,21 @@ class github_embed {
 	 * it as an oembed response
 	 */
 	private function oembed_github_author ( $owner ) {
-
-		$owner_info = $this->api->get_user( $owner );
+		$data = [];
+		$data["owner"] = $owner;
+		$data["owner_info"] = $this->api->get_user( $owner );
+		$data["logo_class"] = apply_filters( 'wp_github_oembed_logo_class',
+										   'github-logo-octocat' );
 
 		$response = new stdClass();
 		$response->type = 'rich';
 		$response->width = '10';
 		$response->height = '10';
 		$response->version = '1.0';
-		$response->title = $owner_info->name;
+		$response->title = $data['owner_info']->name;
+		$response->html = $this->process_template(
+			'templates/oembed_github_author.view.php', $data);
 
-		// @TODO This should all be templated
-		$logo_class = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
-		$response->html = '<div class="github-embed github-embed-user ' . $logo_class . '">';
-		$response->html .= '<p><a href="https://github.com/' . esc_attr( $owner ) . '" target="_blank"><strong>' . esc_html( $owner ) . '</strong></a><br/>';
-		$response->html .= esc_html( number_format_i18n( $owner_info->public_repos ) ) . ' repositories, ';
-		$response->html .= esc_html( number_format_i18n( $owner_info->followers ) ) . ' followers.</p>';
-		$response->html .= '</div>';
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
