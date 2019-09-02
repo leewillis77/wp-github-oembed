@@ -1,11 +1,11 @@
-<div class="github-embed github-embed-user <?= $data['logo_class'] ?>">
+<div class="github-embed github-embed-user <?php echo $data['logo_class'] ?>">
 	<p>
-		<a href="https://github.com/<?= esc_attr( $data['owner'] ) ?>" target="_blank">
+		<a href="https://github.com/<?php echo esc_attr( $data['owner'] ) ?>" target="_blank">
 			<strong>
-				<?= esc_html( $data['owner'] ) ?>
+				<?php echo esc_html( $data['owner'] ) ?>
 			</strong>
 		</a>
 		<br>
-		<?= esc_html( number_format_i18n( $data['owner_info']->public_repos ) ) ?> repositories, <?= esc_html( number_format_i18n( $data['owner_info']->followers ) ) ?> followers.
+		<?php echo esc_html( number_format_i18n( $data['owner_info']->public_repos ) ) ?> repositories, <?php echo esc_html( number_format_i18n( $data['owner_info']->followers ) ) ?> followers.
 	</p>
 </div>
