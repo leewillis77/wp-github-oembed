@@ -1,22 +1,22 @@
-<div class="github-embed github-embed-repository <?= $data['logo_class'] ?>">
+<div class="github-embed github-embed-repository <?php echo $data['logo_class'] ?>">
     <p>
-        <a href="<?= esc_attr( $data['repo']->html_url ) ?>" target="_blank">
+        <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>" target="_blank">
 			<strong>
-				<?= esc_html( $data['repo']->description ) ?>
+				<?php echo esc_html( $data['repo']->description ) ?>
 			</strong>
 		</a>
 		<br>
-        <a href="<?= esc_attr( $data['repo']->html_url ) ?>" target="_blank"><?= esc_html( $data['repo']->html_url ) ?></a><br>
-        <a href="<?= esc_attr( $data['repo']->html_url ) ?>/network" target="_blank"><?= esc_html( number_format_i18n( $data['repo']->forks_count ) ) ?></a> forks.<br>
-        <a href="<?= esc_attr( $data['repo']->html_url ) ?>/stargazers" target="_blank"><?= esc_html( number_format_i18n( $data['repo']->stargazers_count ) ) ?></a> stars.<br>
-        <a href="<?= esc_attr( $data['repo']->html_url ) ?>/issues" target="_blank"><?= esc_html( number_format_i18n( $data['repo']->open_issues_count ) ) ?></a> open issues.<br>
+        <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>" target="_blank"><?php echo esc_html( $data['repo']->html_url ) ?></a><br>
+        <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/network" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->forks_count ) ) ?></a> forks.<br>
+        <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/stargazers" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->stargazers_count ) ) ?></a> stars.<br>
+        <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/issues" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->open_issues_count ) ) ?></a> open issues.<br>
         Recent commits:
         <ul class="github_commits">
             <?php
             $i = 0;
             foreach ( $data['commits'] as $commit ) : ?>
                 <li class="github_commit">
-                    <a href="https://github.com/<?= $data['owner'] ?>/<?= $data['repository'] ?>/commit/<?= esc_attr( $commit->sha ) ?>" target="_blank"><?= esc_html( $commit->commit->message ) ?></a>, <?= esc_html( $commit->commit->committer->name ); ?>
+                    <a href="https://github.com/<?php echo $data['owner_slug'] ?>/<?php echo $data['repo_slug'] ?>/commit/<?php echo esc_attr( $commit->sha ) ?>" target="_blank"><?php echo esc_html( $commit->commit->message ) ?></a>, <?php echo esc_html( $commit->commit->committer->name ); ?>
                 </li>
             <?php
                 if (++$i == 5) break;
