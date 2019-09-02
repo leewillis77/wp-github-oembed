@@ -176,14 +176,17 @@ class github_embed {
 	}
 
 	/**
-	 * Capture then return output of template, provided theme or fallback to plugin default
-	 * @param  string $template   The template name to process
-	 * @param  string $data       Array, object, or variable that the template needs
+	 * Capture then return output of template, provided theme or fallback to plugin default.
+	 *
+	 * @param string $template The template name to process.
+	 * @param string $data Array, object, or variable that the template needs.
+	 *
+	 * @return string
 	 */
 	private function process_template( $template, $data ) {
 		ob_start();
-		if ( ! locate_template($template, true) ) {
-			require_once $template;
+		if ( ! locate_template( 'wp-github-oembed/' . $template, true ) ) {
+			require_once 'templates/' . $template;
 		}
 		return ob_get_clean();
 	}
@@ -207,7 +210,7 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $data['repo']->description;
 		$response->html = $this->process_template(
-			'templates/oembed_github_repo_contributors.view.php', $data);
+			'repository_contributors.php', $data);
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -231,7 +234,7 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $data['repo']->description;
 		$response->html = $this->process_template(
-			'templates/oembed_github_repo_milestone_summary.view.php', $data);
+			'repository_milestone_summary.php', $data);
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -259,7 +262,7 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $data['repo']->description;
 		$response->html = $this->process_template(
-			'templates/oembed_github_repo.view.php', $data);
+			'repository.php', $data);
 
 
 		header( 'Content-Type: application/json' );
@@ -285,7 +288,7 @@ class github_embed {
 		$response->version = '1.0';
 		$response->title = $data['owner_info']->name;
 		$response->html = $this->process_template(
-			'templates/oembed_github_author.view.php', $data);
+			'author.php', $data);
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
