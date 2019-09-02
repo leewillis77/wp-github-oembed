@@ -43,6 +43,10 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 
 == Changelog ==
 
+= 1.8 =
+
+* New: All responses are now templated thanks to https://github.com/Zebouski
+
 = 1.7 =
 
 * Include GitHub logo rather than hotlinking to (no-longer supported) repo for image
