@@ -36,13 +36,13 @@ Author URI: http://www.leewillis.co.uk/
  * class to retrieve the information from the GitHub API.
  * @uses class github_api
  */
-
 class github_embed {
 
 	private $api;
 
 	/**
 	 * Constructor. Registers hooks and filters
+	 *
 	 * @param class $api An instance of the github_api classs
 	 */
 	public function __construct( $api ) {
@@ -73,7 +73,7 @@ class github_embed {
 	 */
 	function cron() {
 		global $wpdb, $table_prefix;
-		$sql = "DELETE
+		$sql     = "DELETE
 				  FROM {$table_prefix}postmeta
 				 WHERE meta_key LIKE '_oembed_%'";
 		$results = $wpdb->get_results( $sql );
@@ -92,12 +92,14 @@ class github_embed {
 	 * Register the oEmbed provider, and point it at a local endpoint since github
 	 * doesn't directly support oEmbed yet. Our local endpoint will use the github
 	 * API to fulfil the request.
-	 * @param  array $providers The current list of providers
+	 *
+	 * @param array $providers The current list of providers
+	 *
 	 * @return array            The list, with our new provider added
 	 */
 	public function register_oembed_handler() {
 		$oembed_url = home_url();
-		$key = $this->get_key();
+		$key        = $this->get_key();
 		$oembed_url = add_query_arg( array( 'github_oembed' => $key ), $oembed_url );
 		wp_oembed_add_provider( '#https?://github.com/.*#i', $oembed_url, true );
 	}
@@ -113,6 +115,7 @@ class github_embed {
 			$key = md5( time() . rand( 0, 65535 ) );
 			add_option( 'github_oembed_key', $key, '', 'yes' );
 		}
+
 		return $key;
 	}
 
@@ -138,7 +141,7 @@ class github_embed {
 		}
 
 		// Check we have the required information
-		$url = isset( $_REQUEST['url'] ) ? $_REQUEST['url'] : null;
+		$url    = isset( $_REQUEST['url'] ) ? $_REQUEST['url'] : null;
 		$format = isset( $_REQUEST['format'] ) ? $_REQUEST['format'] : null;
 
 		if ( ! empty( $format ) && 'json' !== $format ) {
@@ -188,29 +191,31 @@ class github_embed {
 		if ( ! locate_template( 'wp-github-oembed/' . $template, true ) ) {
 			require_once 'templates/' . $template;
 		}
+
 		return ob_get_clean();
 	}
 
 	/**
 	 * Retrieve a list of contributors for a project
-	 * @param  string $owner      The owner of the repository
-	 * @param  string $repository The repository name
+	 *
+	 * @param string $owner The owner of the repository
+	 * @param string $repository The repository name
 	 */
 	private function oembed_github_repo_contributors( $owner, $repository ) {
-		$data = [];
-		$data['repo'] = $this->api->get_repo( $owner, $repository );
-		$data['contributors'] = $this->api->get_repo_contributors( $owner, $repository );
+		$data                  = [];
+		$data['repo']          = $this->api->get_repo( $owner, $repository );
+		$data['contributors']  = $this->api->get_repo_contributors( $owner, $repository );
 		$data['gravatar_size'] = apply_filters( 'github_oembed_gravatar_size', 64 );
-		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$data['logo_class']    = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
 
-		$response = new stdClass();
-		$response->type = 'rich';
-		$response->width = '10';
-		$response->height = '10';
+		$response          = new stdClass();
+		$response->type    = 'rich';
+		$response->width   = '10';
+		$response->height  = '10';
 		$response->version = '1.0';
-		$response->title = $data['repo']->description;
-		$response->html = $this->process_template(
-			'repository_contributors.php', $data);
+		$response->title   = $data['repo']->description;
+		$response->html    = $this->process_template(
+			'repository_contributors.php', $data );
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -222,19 +227,19 @@ class github_embed {
 	 * output it as an oembed response
 	 */
 	private function oembed_github_repo_milestone_summary( $owner, $repository, $milestone ) {
-		$data = [];
-		$data['repo'] = $this->api->get_repo( $owner, $repository );
-		$data['summary'] = $this->api->get_repo_milestone_summary( $owner, $repository, $milestone );
+		$data               = [];
+		$data['repo']       = $this->api->get_repo( $owner, $repository );
+		$data['summary']    = $this->api->get_repo_milestone_summary( $owner, $repository, $milestone );
 		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
 
-		$response = new stdClass();
-		$response->type = 'rich';
-		$response->width = '10';
-		$response->height = '10';
+		$response          = new stdClass();
+		$response->type    = 'rich';
+		$response->width   = '10';
+		$response->height  = '10';
 		$response->version = '1.0';
-		$response->title = $data['repo']->description;
-		$response->html = $this->process_template(
-			'repository_milestone_summary.php', $data);
+		$response->title   = $data['repo']->description;
+		$response->html    = $this->process_template(
+			'repository_milestone_summary.php', $data );
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -246,23 +251,23 @@ class github_embed {
 	 * Retrieve the information from github for a repo, and
 	 * output it as an oembed response
 	 */
-	private function oembed_github_repo ( $owner, $repository ) {
-		$data = [
-			$owner,
-			$repository,
+	private function oembed_github_repo( $owner, $repository ) {
+		$data               = [
+			'owner_slug'      => $owner,
+			'repo_slug'       => $repository,
 		];
-		$data['repo'] = $this->api->get_repo( $owner, $repository );
-		$data['commits'] = $this->api->get_repo_commits( $owner, $repository );
+		$data['repo']       = $this->api->get_repo( $owner, $repository );
+		$data['commits']    = $this->api->get_repo_commits( $owner, $repository );
 		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
 
-		$response = new stdClass();
-		$response->type = 'rich';
-		$response->width = '10';
-		$response->height = '10';
+		$response          = new stdClass();
+		$response->type    = 'rich';
+		$response->width   = '10';
+		$response->height  = '10';
 		$response->version = '1.0';
-		$response->title = $data['repo']->description;
-		$response->html = $this->process_template(
-			'repository.php', $data);
+		$response->title   = $data['repo']->description;
+		$response->html    = $this->process_template(
+			'repository.php', $data );
 
 
 		header( 'Content-Type: application/json' );
@@ -274,21 +279,21 @@ class github_embed {
 	 * Retrieve the information from github for an author, and output
 	 * it as an oembed response
 	 */
-	private function oembed_github_author ( $owner ) {
-		$data = [];
-		$data["owner"] = $owner;
+	private function oembed_github_author( $owner ) {
+		$data               = [];
+		$data["owner"]      = $owner;
 		$data["owner_info"] = $this->api->get_user( $owner );
 		$data["logo_class"] = apply_filters( 'wp_github_oembed_logo_class',
-										   'github-logo-octocat' );
+			'github-logo-octocat' );
 
-		$response = new stdClass();
-		$response->type = 'rich';
-		$response->width = '10';
-		$response->height = '10';
+		$response          = new stdClass();
+		$response->type    = 'rich';
+		$response->width   = '10';
+		$response->height  = '10';
 		$response->version = '1.0';
-		$response->title = $data['owner_info']->name;
-		$response->html = $this->process_template(
-			'author.php', $data);
+		$response->title   = $data['owner_info']->name;
+		$response->html    = $this->process_template(
+			'author.php', $data );
 
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
@@ -298,5 +303,5 @@ class github_embed {
 
 require_once( 'github-api.php' );
 
-$github_api = new github_api();
+$github_api   = new github_api();
 $github_embed = new github_embed( $github_api );

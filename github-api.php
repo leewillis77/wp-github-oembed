@@ -1,7 +1,5 @@
 <?php
 
-
-
 // 0 - none.
 define( 'GEDEBUG_NONE', 0 );
 
