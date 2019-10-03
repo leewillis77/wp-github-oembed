@@ -7,21 +7,20 @@ add_action( 'widgets_init', 'wpb_load_widget' );
 
 
 /**
- * Виджет бокового вида группы ВК
+ * Widget class
  * 
- * @package Minecraft\widgets
  */
 class gitHub extends WP_Widget {
 
     private $fields = array('title' => '','url'=>'');
-    private $descrField = array('title' => 'Заголовок блока','url'=>'Ссылка на гитхаб');
+    private $descrField = array('title' => 'Title widget','url'=>'Url to get info');
 
     public function __construct() {//конструктор
-        parent::__construct("gitHub", "Виджет вывода инфы из гитхаба", array("description" => "Выводит инфу из гитхаба на сайт"));
+        parent::__construct("gitHub", "Echo info on url GitHub", array("description" => "Echo info on url GitHub"));
     }
 
     /**
-     * Основной класс виджета
+     * Work on frontend
      * 
      * @param array $args
      * @param array $instance
@@ -35,7 +34,7 @@ class gitHub extends WP_Widget {
     }
 
     /**
-     * вывод в админке
+     * Work on backend interface
      * 
      * @param array $instance
      */
@@ -44,7 +43,7 @@ class gitHub extends WP_Widget {
     }
 
     /**
-     * обновление настроек
+     * Update Settings
      * 
      * @param array $newInstance
      * @param array $oldInstance
@@ -55,7 +54,7 @@ class gitHub extends WP_Widget {
     }
 
     /**
-     * Генератор полей для админки
+     * Gen fields in backend
      * 
      * @param array $instance
      * @param array $update

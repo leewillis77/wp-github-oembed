@@ -159,10 +159,10 @@ class github_embed {
 
 
 	/**
-	 * Функция обработки URL, вернет JSON или объект ссылки, если $echos будет true
+	 * Return or echo json info on url GitHub
 	 * 
 	 * @param string url
-	 * @param boolean вывод json или возврат объекта
+	 * @param boolean return object or echo json. Default echo json
 	 * @return object version,size,template
 	 */
 
