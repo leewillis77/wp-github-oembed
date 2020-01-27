@@ -104,9 +104,6 @@ class github_api {
 
 		$this->log( "get_repo( $owner, $repository )", GEDEBUG_CALL );
 
-		$owner = trim( $owner, '/' );
-		$repository = trim( $repository, '/' );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository" );
 
 		return json_decode( $results['body'] );
@@ -124,9 +121,6 @@ class github_api {
 	public function get_repo_commits( $owner, $repository ) {
 
 		$this->log( "get_repo_commits( $owner, $repository )", GEDEBUG_CALL );
-
-		$owner = trim( $owner, '/' );
-		$repository = trim( $repository, '/' );
 
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/commits" );
 
@@ -147,9 +141,6 @@ class github_api {
 
 		$this->log( "get_repo_milestone_summary( $owner, $repository, $milestone )", GEDEBUG_CALL );
 
-		$owner = trim( $owner, '/' );
-		$repo = trim( $repository, '/' );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
 
 		return json_decode( $results['body'] );
@@ -161,9 +152,6 @@ class github_api {
 	public function get_repo_contributors( $owner, $repository ) {
 
 		$this->log( "get_repo_contributors( $owner, $repository )", GEDEBUG_CALL );
-
-		$owner = trim( $owner, '/' );
-		$repo = trim( $repository, '/' );
 
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/stats/contributors" );
 
@@ -181,8 +169,6 @@ class github_api {
 	public function get_user( $user ) {
 
 		$this->log( "get_user( $user )", GEDEBUG_CALL );
-
-		$user = trim( $user, '/' );
 
 		$results = $this->call_api( "https://api.github.com/users/$user" );
 
