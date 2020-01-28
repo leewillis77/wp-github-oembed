@@ -41,6 +41,9 @@ Not yet, we're hoping to add templating - all contributions welcome!
 
 ## Changelog
 
+- 1.9
+    - Remove unused code - thanks to pjaudiomv on GitHub.
+    
 - 1.8
     - New: All responses are now templated thanks to https://github.com/Zebouski
 
