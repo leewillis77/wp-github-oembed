@@ -23,6 +23,10 @@ The plugin provides very basic styling, but adds classes so you can style as you
 
 The main development is all going on on [GitHub](https://github.com/leewillis77/wp-github-oembed).
 
+## Treeware
+
+You're free to use this package for free, but if it makes it to your production environment please [buy the world a tree](https://offset.earth/ademtisoftware?gift-trees).
+
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/` directory

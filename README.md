@@ -31,6 +31,18 @@ lugin that allows you to embed details about a github user, or repo just by past
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Paste a Github repo, or user URL into a post, or page
 
+## Treeware
+
+[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen?style=for-the-badge)](https://offset.earth/ademtisoftware?gift-trees)
+
+You're free to use this package, but if it makes it to your production environment please buy the world a tree.
+
+It’s now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a rel="nofollow" href="https://www.bbc.co.uk/news/science-environment-48870920">plant trees</a>. If you support this package and contribute to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+
+You can buy trees here [offset.earth/ademtisoftware](https://offset.earth/ademtisoftware?gift-trees)
+
+Read more about Treeware at [treeware.earth](http://treeware.earth)
+
 ## Frequently Asked Questions
 
 ### Can I change the layout?
