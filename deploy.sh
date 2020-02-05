@@ -37,6 +37,7 @@ echo "Versions match in readme.txt and $MAINFILE. Let's proceed..."
 if git show-ref --tags --quiet --verify -- "refs/tags/$NEWVERSION1"
 	then 
 		echo "Version $NEWVERSION1 already exists as git tag."; 
+		COMMITMSG="Committing $NEWVERSION1"
 	else
 		echo "Git version does not exist. Let's proceed..."
 		cd $GITPATH
