@@ -23,8 +23,8 @@ class github_api {
 
 	private $client_id = null;
 	private $client_secret = null;
-
-
+	private $access_token = null;
+	private $access_token_username = null;
 
 	/**
 	 * Allow the client ID / secret to be set, and used for subsequent calls
@@ -57,13 +57,14 @@ class github_api {
 	public function set_credentials() {
 		$this->client_id = apply_filters( 'github-embed-client-id', $this->client_id );
 		$this->client_secret = apply_filters( 'github-embed-client-secret', $this->client_secret );
+		$this->access_token = apply_filters( 'github-embed-access-token', $this->access_token );
+		$this->access_token_username = apply_filters( 'github-embed-access-token-username', $this->access_token_username );
 	}
 
 
 
 	private function call_api( $url ) {
-
-		// Allow users to supply auth details to enable a higher rate limit
+		// Allow users to supply auth details to enable a higher rate limit [Deprecated]
 		if ( ! empty( $this->client_id ) && ! empty( $this->client_secret ) ) {
 			$url = add_query_arg(
 			                     array(
@@ -73,13 +74,17 @@ class github_api {
 								);
 		}
 
-		$args = array( 'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed');
-
+		$args = array(
+			'user-agent' => 'WordPress Github oEmbed plugin - https://github.com/leewillis77/wp-github-oembed'
+		);
+		if ( ! empty( $this->access_token_username ) && ! empty ( $this->access_token ) ) {
+			$args['headers'] = [
+				'Authorization' => 'Basic ' . base64_encode( $this->access_token_username . ':' . $this->access_token ),
+			];
+		}
 		$this->log( __FUNCTION__." : $url", GEDEBUG_CALL );
 
 		$results = wp_remote_get( $url, $args );
-
-		$this->log( __FUNCTION__ . " : " . print_r( $results,1 ), GEDEBUG_RESP );
 
 		if( is_wp_error( $results ) ||
 		    ! isset( $results['response']['code'] ) ||
