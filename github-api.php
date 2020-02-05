@@ -30,24 +30,20 @@ class github_api {
 	 * Allow the client ID / secret to be set, and used for subsequent calls
 	 */
 	function __construct() {
-
 		add_action( 'plugins_loaded', array( $this, 'set_credentials' ) );
 		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
-
 	}
-
-
 
 	/**
 	 * Extend the timeout since API calls can easily exceed 5 seconds
-	 * @param  int $seconds The current timeout setting
+	 *
+	 * @param int $seconds The current timeout setting
+	 *
 	 * @return int          The revised timeout setting
 	 */
 	function http_request_timeout( $seconds ) {
 		return $seconds < 25 ? 25 : $seconds;
 	}
-
-
 
 	/**
 	 * If you find yourself hitting rate limits, then you can register an application
@@ -55,23 +51,22 @@ class github_api {
 	 * provide the credentials.
 	 */
 	public function set_credentials() {
-		$this->client_id = apply_filters( 'github-embed-client-id', $this->client_id );
-		$this->client_secret = apply_filters( 'github-embed-client-secret', $this->client_secret );
-		$this->access_token = apply_filters( 'github-embed-access-token', $this->access_token );
+		$this->client_id             = apply_filters( 'github-embed-client-id', $this->client_id );
+		$this->client_secret         = apply_filters( 'github-embed-client-secret', $this->client_secret );
+		$this->access_token          = apply_filters( 'github-embed-access-token', $this->access_token );
 		$this->access_token_username = apply_filters( 'github-embed-access-token-username', $this->access_token_username );
 	}
-
-
 
 	private function call_api( $url ) {
 		// Allow users to supply auth details to enable a higher rate limit [Deprecated]
 		if ( ! empty( $this->client_id ) && ! empty( $this->client_secret ) ) {
 			$url = add_query_arg(
-			                     array(
-			                           'client_id' => $this->client_id,
-			                     	   'client_secret' => $this->client_secret ),
-								$url
-								);
+				array(
+					'client_id'     => $this->client_id,
+					'client_secret' => $this->client_secret
+				),
+				$url
+			);
 		}
 
 		$args = array(
@@ -82,13 +77,13 @@ class github_api {
 				'Authorization' => 'Basic ' . base64_encode( $this->access_token_username . ':' . $this->access_token ),
 			];
 		}
-		$this->log( __FUNCTION__." : $url", GEDEBUG_CALL );
+		$this->log( __FUNCTION__ . " : $url", GEDEBUG_CALL );
 
 		$results = wp_remote_get( $url, $args );
 
-		if( is_wp_error( $results ) ||
-		    ! isset( $results['response']['code'] ) ||
-		    $results['response']['code'] != '200' ) {
+		if ( is_wp_error( $results ) ||
+		     ! isset( $results['response']['code'] ) ||
+		     $results['response']['code'] != '200' ) {
 			header( 'HTTP/1.0 404 Not Found' );
 			die( 'Octocat is lost, and afraid' );
 		}
@@ -98,11 +93,12 @@ class github_api {
 	}
 
 
-
 	/**
 	 * Get a repository from the GitHub API
-	 * @param  string $owner      The repository's owner
-	 * @param  string $repository The respository name
+	 *
+	 * @param string $owner The repository's owner
+	 * @param string $repository The respository name
+	 *
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo( $owner, $repository ) {
@@ -116,11 +112,12 @@ class github_api {
 	}
 
 
-
 	/**
 	 * Get commit information for a repository from the GitHub API
-	 * @param  string $owner      The repository's owner
-	 * @param  string $repository The respository name
+	 *
+	 * @param string $owner The repository's owner
+	 * @param string $repository The respository name
+	 *
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo_commits( $owner, $repository ) {
@@ -134,12 +131,13 @@ class github_api {
 	}
 
 
-
 	/**
 	 * Get a milestone summary from the GitHub API
-	 * @param  string $owner      The repository's owner
-	 * @param  string $repository The respository name
-	 * @param  string $milestone  The milestone ID
+	 *
+	 * @param string $owner The repository's owner
+	 * @param string $repository The respository name
+	 * @param string $milestone The milestone ID
+	 *
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo_milestone_summary( $owner, $repository, $milestone ) {
@@ -153,7 +151,6 @@ class github_api {
 	}
 
 
-
 	public function get_repo_contributors( $owner, $repository ) {
 
 		$this->log( "get_repo_contributors( $owner, $repository )", GEDEBUG_CALL );
@@ -165,10 +162,11 @@ class github_api {
 	}
 
 
-
 	/**
 	 * Get a user from the GitHub API
-	 * @param  string $user       The username
+	 *
+	 * @param string $user The username
+	 *
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_user( $user ) {
@@ -182,13 +180,11 @@ class github_api {
 	}
 
 
-
 	private function log( $msg, $level ) {
 		if ( GITHUB_API_LEVEL >= $level ) {
-			error_log( "[GE$level]: ".$msg );
+			error_log( "[GE$level]: " . $msg );
 		}
 	}
-
 
 
 }
