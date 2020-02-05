@@ -4,7 +4,7 @@ Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&
 Tags: github, embed, oembed
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 1.9
+Stable tag: 2.0
 
 == Description ==
 
@@ -42,6 +42,10 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 4. Project contributors
 
 == Changelog ==
+
+= 2.0 =
+
+* Support for authenticating using personal access tokens
 
 = 1.9 =
 
