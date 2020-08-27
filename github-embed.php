@@ -59,7 +59,7 @@ class github_embed {
 	 * Make sure we have a scheduled event set to clear down the oEmbed cache until
 	 * WordPress supports cache_age in oEmbed responses.
 	 */
-	function schedule_expiry() {
+	public function schedule_expiry() {
 		if ( ! wp_next_scheduled( 'github_embed_cron' ) ) {
 			$frequency = apply_filters( 'github_embed_cache_frequency', 'daily' );
 			wp_schedule_event( time(), $frequency, 'github_embed_cron' );
@@ -71,7 +71,7 @@ class github_embed {
 	 * Note: This is a bit sledgehammer-to-crack-a-nut hence why I'm only running it
 	 * daily. Ideally WP should honour cache_age in oEmbed responses properly
 	 */
-	function cron() {
+	public function cron() {
 		global $wpdb, $table_prefix;
 		$sql     = "DELETE
 				  FROM {$table_prefix}postmeta
@@ -83,7 +83,7 @@ class github_embed {
 	 * Enqueue the frontend CSS
 	 * @return void
 	 */
-	function enqueue_styles() {
+	public function enqueue_styles() {
 		wp_register_style( 'github-embed', plugins_url( basename( dirname( __FILE__ ) ) . '/css/github-embed.css' ) );
 		wp_enqueue_style( 'github-embed' );
 	}

@@ -14,12 +14,10 @@ if ( ! defined( 'GITHUB_API_LEVEL' ) ) {
 	define( 'GITHUB_API_LEVEL', GEDEBUG_NONE );
 }
 
-
 /**
  * This class contains all the functions that actually retrieve information from the GitHub API
  */
 class github_api {
-
 
 	private $client_id = null;
 	private $client_secret = null;
@@ -29,7 +27,7 @@ class github_api {
 	/**
 	 * Allow the client ID / secret to be set, and used for subsequent calls
 	 */
-	function __construct() {
+	public function __construct() {
 		add_action( 'plugins_loaded', array( $this, 'set_credentials' ) );
 		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
 	}
@@ -41,7 +39,7 @@ class github_api {
 	 *
 	 * @return int          The revised timeout setting
 	 */
-	function http_request_timeout( $seconds ) {
+	public function http_request_timeout( $seconds ) {
 		return $seconds < 25 ? 25 : $seconds;
 	}
 
@@ -92,7 +90,6 @@ class github_api {
 
 	}
 
-
 	/**
 	 * Get a repository from the GitHub API
 	 *
@@ -102,15 +99,12 @@ class github_api {
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo( $owner, $repository ) {
-
 		$this->log( "get_repo( $owner, $repository )", GEDEBUG_CALL );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository" );
 
 		return json_decode( $results['body'] );
 
 	}
-
 
 	/**
 	 * Get commit information for a repository from the GitHub API
@@ -121,15 +115,11 @@ class github_api {
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo_commits( $owner, $repository ) {
-
 		$this->log( "get_repo_commits( $owner, $repository )", GEDEBUG_CALL );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/commits" );
 
 		return json_decode( $results['body'] );
-
 	}
-
 
 	/**
 	 * Get a milestone summary from the GitHub API
@@ -141,26 +131,18 @@ class github_api {
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_repo_milestone_summary( $owner, $repository, $milestone ) {
-
 		$this->log( "get_repo_milestone_summary( $owner, $repository, $milestone )", GEDEBUG_CALL );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/milestones/$milestone" );
 
 		return json_decode( $results['body'] );
-
 	}
 
-
 	public function get_repo_contributors( $owner, $repository ) {
-
 		$this->log( "get_repo_contributors( $owner, $repository )", GEDEBUG_CALL );
-
 		$results = $this->call_api( "https://api.github.com/repos/$owner/$repository/stats/contributors" );
 
 		return json_decode( $results['body'] );
-
 	}
-
 
 	/**
 	 * Get a user from the GitHub API
@@ -170,21 +152,15 @@ class github_api {
 	 * @return object             The response from the GitHub API
 	 */
 	public function get_user( $user ) {
-
 		$this->log( "get_user( $user )", GEDEBUG_CALL );
-
 		$results = $this->call_api( "https://api.github.com/users/$user" );
 
 		return json_decode( $results['body'] );
-
 	}
-
 
 	private function log( $msg, $level ) {
 		if ( GITHUB_API_LEVEL >= $level ) {
 			error_log( "[GE$level]: " . $msg );
 		}
 	}
-
-
 }
