@@ -51,15 +51,30 @@ class github_embed {
 		add_action( 'init', array( $this, 'maybe_handle_oembed' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'admin_init', array( $this, 'schedule_expiry' ) );
+		add_action( 'admin_init', [ $this, 'block' ] );
 		add_action( 'github_embed_cron', array( $this, 'cron' ) );
 		// @TODO i18n
+	}
+
+	public function block() {
+		$asset_file = include( plugin_dir_path( __FILE__ ) . 'build/index.asset.php');
+		$js_file = plugins_url( 'build/index.js', __FILE__ );
+		wp_register_script(
+			'wp-github-embed/github-block',
+			$js_file,
+			$asset_file['dependencies'],
+			$asset_file['version']
+		);
+		register_block_type( 'wp-github-embed/github-block', array(
+			'editor_script' => 'wp-github-embed/github-block',
+		) );
 	}
 
 	/**
 	 * Make sure we have a scheduled event set to clear down the oEmbed cache until
 	 * WordPress supports cache_age in oEmbed responses.
 	 */
-	function schedule_expiry() {
+	public function schedule_expiry() {
 		if ( ! wp_next_scheduled( 'github_embed_cron' ) ) {
 			$frequency = apply_filters( 'github_embed_cache_frequency', 'daily' );
 			wp_schedule_event( time(), $frequency, 'github_embed_cron' );
@@ -71,7 +86,7 @@ class github_embed {
 	 * Note: This is a bit sledgehammer-to-crack-a-nut hence why I'm only running it
 	 * daily. Ideally WP should honour cache_age in oEmbed responses properly
 	 */
-	function cron() {
+	public function cron() {
 		global $wpdb, $table_prefix;
 		$sql     = "DELETE
 				  FROM {$table_prefix}postmeta
@@ -83,7 +98,7 @@ class github_embed {
 	 * Enqueue the frontend CSS
 	 * @return void
 	 */
-	function enqueue_styles() {
+	public function enqueue_styles() {
 		wp_register_style( 'github-embed', plugins_url( basename( dirname( __FILE__ ) ) . '/css/github-embed.css' ) );
 		wp_enqueue_style( 'github-embed' );
 	}
@@ -102,21 +117,6 @@ class github_embed {
 		$key        = $this->get_key();
 		$oembed_url = add_query_arg( array( 'github_oembed' => $key ), $oembed_url );
 		wp_oembed_add_provider( '#https?://github.com/.*#i', $oembed_url, true );
-	}
-
-	/**
-	 * Generate a unique key that can be used on our requests to stop others
-	 * hijacking our internal oEmbed API
-	 * @return string The site key
-	 */
-	private function get_key() {
-		$key = get_option( 'github_oembed_key' );
-		if ( ! $key ) {
-			$key = md5( time() . rand( 0, 65535 ) );
-			add_option( 'github_oembed_key', $key, '', 'yes' );
-		}
-
-		return $key;
 	}
 
 	/**
@@ -298,6 +298,21 @@ class github_embed {
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
+	}
+
+	/**
+	 * Generate a unique key that can be used on our requests to stop others
+	 * hijacking our internal oEmbed API
+	 * @return string The site key
+	 */
+	private function get_key() {
+		$key = get_option( 'github_oembed_key' );
+		if ( ! $key ) {
+			$key = md5( time() . rand( 0, 65535 ) );
+			add_option( 'github_oembed_key', $key, '', 'yes' );
+		}
+
+		return $key;
 	}
 }
 
