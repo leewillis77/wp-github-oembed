@@ -64,7 +64,7 @@ echo "Ignoring github specific files and deployment script"
 svn propset svn:ignore "deploy.sh
 README.md
 .git
-img/cpw.png
+img/cpw2.png
 .gitignore" "$SVNPATH/trunk/"
 
 echo "Changing directory to SVN and committing to trunk"
