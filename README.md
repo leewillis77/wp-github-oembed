@@ -33,7 +33,7 @@ lugin that allows you to embed details about a github user, or repo just by past
 
 ## Support this free plugin
 
-<img src="https://raw.github.com/leewillis77/wp-github-oembed/master/img/cpw.png" width="250" alt="We're a climate-positive workforce" style="float: left; margin-right: 1em;">
+<img src="https://raw.github.com/leewillis77/wp-github-oembed/master/img/cpw.png" width="100%" alt="We're a climate-positive workforce">
 
 Using this plugin on your live site? Please buy the world some trees...
 
