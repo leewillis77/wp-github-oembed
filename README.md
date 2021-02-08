@@ -31,17 +31,20 @@ lugin that allows you to embed details about a github user, or repo just by past
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Paste a Github repo, or user URL into a post, or page
 
-## Treeware
+## Support this free plugin
 
-[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen?style=for-the-badge)](https://offset.earth/ademtisoftware?gift-trees)
+![We're a climate-positive workforce](https://raw.github.com/leewillis77/wp-github-oembed/master/img/cpw.png =250x250)
 
-You're free to use this package, but if it makes it to your production environment please buy the world a tree.
+Using this plugin on your live site? Please buy the world some trees...
 
-It’s now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a rel="nofollow" href="https://www.bbc.co.uk/news/science-environment-48870920">plant trees</a>. If you support this package and contribute to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://ecologi.com/ademtisoftware?gift-trees&amp;r=ademtisoftware">Support this free plugin by planting trees</a>
 
-You can buy trees here [offset.earth/ademtisoftware](https://offset.earth/ademtisoftware?gift-trees)
+It’s now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a href="https://www.bbc.co.uk/news/science-environment-48870920" target="_blank" rel="noopener noreferrer nofollow">plant trees</a>.
 
-Read more about Treeware at [treeware.earth](http://treeware.earth)
+As a business, we already donate a percentage of our profits from premium plugins to global climate change projects. You're free to use this plugin free of charge, but if you do, please consider <a
+target="_blank" rel="noopener noreferrer nofollow" href="https://ecologi.com/ademtisoftware?gift-trees&amp;r=ademtisoftware">buying the world some trees</a> in return. 
+
+You’ll be creating employment for local families and restoring wildlife habitats.
 
 ## Frequently Asked Questions
 
