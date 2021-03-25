@@ -154,9 +154,22 @@ class github_embed {
 			die( 'Octocat is lost, and afraid' );
 		}
 
+		$this->mechanicUrl($url);
+	}
+
+
+	/**
+	 * Return or echo json info on url GitHub
+	 * 
+	 * @param string url
+	 * @param boolean return object or echo json. Default echo json
+	 * @return object version,size,template
+	 */
+
+	public function mechanicUrl($url,$echos=false){
 		// Issues / Milestones
 		if ( preg_match( '#https?://github.com/([^/]*)/([^/]*)/graphs/contributors/?$#i', $url, $matches ) && ! empty( $matches[2] ) ) {
-			$this->oembed_github_repo_contributors( $matches[1], $matches[2] );
+			return $this->oembed_github_repo_contributors( $matches[1], $matches[2], $echos );
 		} elseif ( preg_match( '#https?://github.com/([^/]*)/([^/]*)/issues.*$#i', $url, $matches ) && ! empty( $matches[2] ) ) {
 			if ( preg_match( '#issues.?milestone=([0-9]*)#i', $url, $milestones ) ) {
 				$milestone = $milestones[1];
@@ -164,17 +177,17 @@ class github_embed {
 				$milestone = null;
 			}
 			if ( $milestone ) {
-				$this->oembed_github_repo_milestone_summary( $matches[1], $matches[2], $milestone );
+				return $this->oembed_github_repo_milestone_summary( $matches[1], $matches[2], $milestone, $echos );
 			}
 		} elseif ( preg_match( '#https?://github.com/([^/]*)/([^/]*)/milestone/([0-9]*)$#i', $url, $matches ) ) {
 			// New style milestone URL, e.g. https://github.com/example/example/milestone/1.
-			$this->oembed_github_repo_milestone_summary( $matches[1], $matches[2], $matches[3] );
+			return $this->oembed_github_repo_milestone_summary( $matches[1], $matches[2], $matches[3], $echos );
 		} elseif ( preg_match( '#https?://github.com/([^/]*)/([^/]*)/?$#i', $url, $matches ) && ! empty( $matches[2] ) ) {
 			// Repository.
-			$this->oembed_github_repo( $matches[1], $matches[2] );
+			return $this->oembed_github_repo( $matches[1], $matches[2], $echos );
 		} elseif ( preg_match( '#https?://github.com/([^/]*)/?$#i', $url, $matches ) ) {
 			// User.
-			$this->oembed_github_author( $matches[1] );
+			return $this->oembed_github_author( $matches[1], $echos );
 		}
 	}
 
@@ -201,7 +214,7 @@ class github_embed {
 	 * @param string $owner The owner of the repository
 	 * @param string $repository The repository name
 	 */
-	private function oembed_github_repo_contributors( $owner, $repository ) {
+	private function oembed_github_repo_contributors( $owner, $repository,$ret=false ) {
 		$data                  = [];
 		$data['repo']          = $this->api->get_repo( $owner, $repository );
 		$data['contributors']  = $this->api->get_repo_contributors( $owner, $repository );
@@ -216,7 +229,9 @@ class github_embed {
 		$response->title   = $data['repo']->description;
 		$response->html    = $this->process_template(
 			'repository_contributors.php', $data );
-
+		if ($ret){
+			return $response;
+		}
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -226,7 +241,7 @@ class github_embed {
 	 * Retrieve the summary information for a repo's milestone, and
 	 * output it as an oembed response
 	 */
-	private function oembed_github_repo_milestone_summary( $owner, $repository, $milestone ) {
+	private function oembed_github_repo_milestone_summary( $owner, $repository, $milestone, $ret=false ) {
 		$data               = [];
 		$data['repo']       = $this->api->get_repo( $owner, $repository );
 		$data['summary']    = $this->api->get_repo_milestone_summary( $owner, $repository, $milestone );
@@ -240,7 +255,9 @@ class github_embed {
 		$response->title   = $data['repo']->description;
 		$response->html    = $this->process_template(
 			'repository_milestone_summary.php', $data );
-
+		if ($ret){
+			return $response;
+		}
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -251,7 +268,7 @@ class github_embed {
 	 * Retrieve the information from github for a repo, and
 	 * output it as an oembed response
 	 */
-	private function oembed_github_repo( $owner, $repository ) {
+	private function oembed_github_repo( $owner, $repository, $ret=false ) {
 		$data               = [
 			'owner_slug'      => $owner,
 			'repo_slug'       => $repository,
@@ -269,7 +286,9 @@ class github_embed {
 		$response->html    = $this->process_template(
 			'repository.php', $data );
 
-
+		if ($ret){
+			return $response;
+		}
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -279,7 +298,7 @@ class github_embed {
 	 * Retrieve the information from github for an author, and output
 	 * it as an oembed response
 	 */
-	private function oembed_github_author( $owner ) {
+	private function oembed_github_author( $owner, $ret=false ) {
 		$data               = [];
 		$data["owner"]      = $owner;
 		$data["owner_info"] = $this->api->get_user( $owner );
@@ -294,7 +313,9 @@ class github_embed {
 		$response->title   = $data['owner_info']->name;
 		$response->html    = $this->process_template(
 			'author.php', $data );
-
+		if ($ret){
+			return $response;
+		}
 		header( 'Content-Type: application/json' );
 		echo json_encode( $response );
 		die();
@@ -302,6 +323,7 @@ class github_embed {
 }
 
 require_once( 'github-api.php' );
+require_once (dirname(__FILE__)."/widget.php");
 
 $github_api   = new github_api();
 $github_embed = new github_embed( $github_api );
