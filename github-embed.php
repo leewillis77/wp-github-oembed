@@ -202,11 +202,12 @@ class github_embed {
 	 * @param string $repository The repository name
 	 */
 	private function oembed_github_repo_contributors( $owner, $repository ) {
-		$data                  = [];
-		$data['repo']          = $this->api->get_repo( $owner, $repository );
-		$data['contributors']  = $this->api->get_repo_contributors( $owner, $repository );
-		$data['gravatar_size'] = apply_filters( 'github_oembed_gravatar_size', 64 );
-		$data['logo_class']    = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$data                     = [];
+		$data['repo']             = $this->api->get_repo( $owner, $repository );
+		$data['contributors']     = $this->api->get_repo_contributors( $owner, $repository );
+		$data['gravatar_size']    = apply_filters( 'github_oembed_gravatar_size', 64 );
+		$data['logo_class']       = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-octocat' );
+		$data['details_expanded'] = apply_filters( 'wp_github_oembed_contributor_details_expanded', true );
 
 		$response          = new stdClass();
 		$response->type    = 'rich';
@@ -252,13 +253,14 @@ class github_embed {
 	 * output it as an oembed response
 	 */
 	private function oembed_github_repo( $owner, $repository ) {
-		$data               = [
-			'owner_slug'      => $owner,
-			'repo_slug'       => $repository,
+		$data                     = [
+			'owner_slug' => $owner,
+			'repo_slug'  => $repository,
 		];
-		$data['repo']       = $this->api->get_repo( $owner, $repository );
-		$data['commits']    = $this->api->get_repo_commits( $owner, $repository );
-		$data['logo_class'] = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
+		$data['repo']             = $this->api->get_repo( $owner, $repository );
+		$data['commits']          = $this->api->get_repo_commits( $owner, $repository );
+		$data['logo_class']       = apply_filters( 'wp_github_oembed_logo_class', 'github-logo-mark' );
+		$data['details_expanded'] = apply_filters( 'wp_github_oembed_repository_commit_details_expanded', true );
 
 		$response          = new stdClass();
 		$response->type    = 'rich';

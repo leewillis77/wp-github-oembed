@@ -10,7 +10,7 @@
         <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/network" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->forks_count ) ) ?></a> forks.<br>
         <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/stargazers" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->stargazers_count ) ) ?></a> stars.<br>
         <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>/issues" target="_blank"><?php echo esc_html( number_format_i18n( $data['repo']->open_issues_count ) ) ?></a> open issues.<br>
-        <details>
+        <details <?php echo $data['details_expanded'] ? 'open' : ''; ?>>
             <summary>Recent commits:</summary>
             <ul class="github_commits">
                 <?php
