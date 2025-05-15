@@ -188,7 +188,7 @@ class github_embed {
 	 */
 	private function process_template( $template, $data ) {
 		ob_start();
-		if ( ! locate_template( 'wp-github-oembed/' . $template, true ) ) {
+		if ( ! locate_template( 'wp-github-oembed/' . $template, true, false, ['data' => $data] ) ) {
 			require_once 'templates/' . $template;
 		}
 

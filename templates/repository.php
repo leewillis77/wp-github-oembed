@@ -1,3 +1,8 @@
+<?php
+	if ( ! isset( $data ) && isset( $args['data'] ) ) {
+		$data = $args['data'];
+	}
+?>
 <div class="github-embed github-embed-repository <?php echo $data['logo_class'] ?>">
     <p>
         <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>" target="_blank">
