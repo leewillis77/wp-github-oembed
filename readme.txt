@@ -4,7 +4,7 @@ Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&
 Tags: github, embed, oembed
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 
 == Description ==
 
@@ -46,6 +46,9 @@ Yes, you can override templates by copying the relevant template from the templa
 4. Project contributors
 
 == Changelog ==
+
+= 2.2.1 =
+* No changes. Internal re-packaging.
 
 = 2.2.0 =
 * Fix issue where data was not pass to overridden templates, making templating possible.

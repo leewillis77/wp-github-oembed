@@ -3,7 +3,7 @@
 Plugin Name: Github Embed
 Plugin URI: https://wordpress.org/plugins/github-embed/
 Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
-Version: 2.2.0
+Version: 2.2.1
 Author: Ademti Software Ltd.
 Author URI: https://www.ademti-software.co.uk/
 */
