@@ -46,45 +46,6 @@ target="_blank" rel="noopener noreferrer nofollow" href="https://ecologi.com/ade
 
 You’ll be creating employment for local families and restoring wildlife habitats.
 
-## Frequently Asked Questions
+## Need more information?
 
-### Can I change the layout?
-Not yet, we're hoping to add templating - all contributions welcome!
-
-## Screenshots
-
-
-## Changelog
-
-- 1.9
-    - Remove unused code - thanks to pjaudiomv on GitHub.
-    
-- 1.8
-    - New: All responses are now templated thanks to https://github.com/Zebouski
-
-- 1.7
-    - Include GitHub logo rather than hotlinking to (no-longer supported) repo for image
-    - Add wp_github_oembed_logo_class filter
-
-- 1.6
-    - Internal code cleanups
-    - Remove unnecessary debug code
-
-- 1.5
-    - Fixes for newer GitHub milestone URLs
-
-- 1.4
-   - Fix PHP warning that could block contributor embeds.
-   - Fix Contributor embeds to use correct API call
-   - Pass correct initial value to credentials filters
-
-- 1.3
-    - Expire the oEmbed cache daily
-
-- 1.2
-    - Support for milestone summaries
-    - Support for contributor lists
-- 1.1
-    - Default CSS and more styling
-- 1.0
-	- First release
+For more information about this plugin see its entry in the [WordPress.org plugin directory](https://wordpress.org/plugins/github-embed/).

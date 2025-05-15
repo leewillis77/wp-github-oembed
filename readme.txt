@@ -2,13 +2,13 @@
 Contributors: leewillis77
 Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&utm_medium=www&utm_campaign=github-embed
 Tags: github, embed, oembed
-Requires at least: 5.4
+Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 
 == Description ==
 
-Plugin that allows you to embed details from github just by pasting in the URL as you would any other embed source. Currently supports:
+Plugin that allows you to embed details from GitHub just by pasting in the URL as you would any other embed source. Currently supports:
 
 * Repositories
 * User profiles
@@ -36,7 +36,7 @@ You're free to use this package for free, but if it makes it to your production 
 == Frequently Asked Questions ==
 
 = Can I change the layout? =
-Not yet, we're hoping to add templating - [all contributions welcome](https://github.com/leewillis77/wp-github-oembed)!
+Yes, you can override templates by copying the relevant template from the templates folder to a folder in your theme called `wp-github-oembed/`
 
 == Screenshots ==
 
@@ -46,6 +46,9 @@ Not yet, we're hoping to add templating - [all contributions welcome](https://gi
 4. Project contributors
 
 == Changelog ==
+
+= 2.2.0 =
+* Fix issue where data was not pass to overridden templates, making templating possible.
 
 = 2.1.0 =
 * Wrap recent commits in a <details> tag, expanded by default. Props ZjzMisaka on GitHub
