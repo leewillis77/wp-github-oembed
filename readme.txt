@@ -5,6 +5,8 @@ Tags: github, embed, oembed
 Requires at least: 6.2
 Tested up to: 6.8
 Stable tag: 2.2.1
+License: GPLv2
+Simple plugin that allows you to embed details from GitHub just by pasting in the URL as you would any other embed source.
 
 == Description ==
 
