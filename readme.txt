@@ -3,7 +3,7 @@ Contributors: leewillis77
 Donate link: http://www.leewillis.co.uk/wordpress-plugins/?utm_source=wordpress&utm_medium=www&utm_campaign=github-embed
 Tags: github, embed, oembed
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 2.2.1
 License: GPLv2
 Simple plugin that allows you to embed details from GitHub just by pasting in the URL as you would any other embed source.
