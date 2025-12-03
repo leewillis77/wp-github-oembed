@@ -1,9 +1,10 @@
 <?php
+    // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	if ( ! isset( $data ) && isset( $args['data'] ) ) {
 		$data = $args['data'];
 	}
 ?>
-<div class="github-embed github-embed-repository <?php echo $data['logo_class'] ?>">
+<div class="github-embed github-embed-repository <?php echo esc_attr( $data['logo_class'] ); ?>">
     <p>
         <a href="<?php echo esc_attr( $data['repo']->html_url ) ?>" target="_blank">
 			<strong>
@@ -22,7 +23,7 @@
                 $i = 0;
                 foreach ( $data['commits'] as $commit ) : ?>
                     <li class="github_commit">
-                        <a href="https://github.com/<?php echo $data['owner_slug'] ?>/<?php echo $data['repo_slug'] ?>/commit/<?php echo esc_attr( $commit->sha ) ?>" target="_blank"><?php echo esc_html( $commit->commit->message ) ?></a>, <?php echo esc_html( $commit->commit->committer->name ); ?>
+                        <a href="https://github.com/<?php echo esc_attr( $data['owner_slug'] ); ?>/<?php echo esc_attr( $data['repo_slug'] ); ?>/commit/<?php echo esc_attr( $commit->sha ) ?>" target="_blank"><?php echo esc_html( $commit->commit->message ) ?></a>, <?php echo esc_html( $commit->commit->committer->name ); ?>
                     </li>
                 <?php
                     if (++$i == 5) break;

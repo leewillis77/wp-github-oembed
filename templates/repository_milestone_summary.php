@@ -1,9 +1,10 @@
 <?php
+    // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	if ( ! isset( $data ) && isset( $args['data'] ) ) {
 		$data = $args['data'];
 	}
 ?>
-<div class="github-embed github-embed-milestone-summary <?php echo $data['logo_class'] ?>">
+<div class="github-embed github-embed-milestone-summary <?php echo esc_attr( $data['logo_class'] ); ?>">
 	<p>
 		<a href="<?php echo esc_attr( $data['repo']->html_url ) ?>" target="_blank">
 			<strong>

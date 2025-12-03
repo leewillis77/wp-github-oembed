@@ -1,11 +1,12 @@
 <?php
 /*
-Plugin Name: Github Embed
-Plugin URI: https://wordpress.org/plugins/github-embed/
-Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
-Version: 2.2.1
-Author: Ademti Software Ltd.
-Author URI: https://www.ademti-software.co.uk/
+ * Plugin Name: Github Embed
+ * Plugin URI: https://wordpress.org/plugins/github-embed/
+ * Description: Paste the URL to a Github project into your posts or pages, and have the project information pulled in and displayed automatically
+ * Version: 2.2.1
+ * Author: Ademti Software Ltd.
+ * License: GPLv2
+ * Author URI: https://www.ademti-software.co.uk/
 */
 
 /**
@@ -29,6 +30,10 @@ Author URI: https://www.ademti-software.co.uk/
  * GNU General Public License for more details.
  * **********************************************************************
  */
+
+define( 'GITHUB_EMBED_PLUGIN_VERSION', '2.2.1' );
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 /**
  * This class handles being the oEmbed provider in terms of registering the URLs that
@@ -73,10 +78,14 @@ class github_embed {
 	 */
 	public function cron() {
 		global $wpdb, $table_prefix;
-		$sql     = "DELETE
-				  FROM {$table_prefix}postmeta
-				 WHERE meta_key LIKE '_oembed_%'";
-		$results = $wpdb->get_results( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->get_results(
+			$wpdb->prepare(
+				"DELETE FROM %i WHERE meta_key LIKE %s",
+				$table_prefix . 'postmeta',
+				'_oembed_%'
+			)
+		);
 	}
 
 	/**
@@ -84,7 +93,12 @@ class github_embed {
 	 * @return void
 	 */
 	public function enqueue_styles() {
-		wp_register_style( 'github-embed', plugins_url( basename( dirname( __FILE__ ) ) . '/css/github-embed.css' ) );
+		wp_register_style(
+			'github-embed',
+			plugins_url( basename( dirname( __FILE__ ) ) . '/css/github-embed.css' ),
+			[],
+			GITHUB_EMBED_PLUGIN_VERSION
+		);
 		wp_enqueue_style( 'github-embed' );
 	}
 
@@ -112,7 +126,7 @@ class github_embed {
 	private function get_key() {
 		$key = get_option( 'github_oembed_key' );
 		if ( ! $key ) {
-			$key = md5( time() . rand( 0, 65535 ) );
+			$key = md5( time() . wp_rand( 0, 65535 ) );
 			add_option( 'github_oembed_key', $key, '', 'yes' );
 		}
 
@@ -125,6 +139,7 @@ class github_embed {
 	 * Insert rant here about WP's lack of a front-end AJAX handler.
 	 */
 	public function maybe_handle_oembed() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['github_oembed'] ) ) {
 			return $this->handle_oembed();
 		}
@@ -135,14 +150,17 @@ class github_embed {
 	 */
 	public function handle_oembed() {
 		// Check this request is valid
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		if ( $_GET['github_oembed'] !== $this->get_key() ) {
 			header( 'HTTP/1.0 403 Forbidden' );
 			die( 'Sad Octocat is sad.' );
 		}
 
 		// Check we have the required information
-		$url    = isset( $_REQUEST['url'] ) ? $_REQUEST['url'] : null;
-		$format = isset( $_REQUEST['format'] ) ? $_REQUEST['format'] : null;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$url    = isset( $_REQUEST['url'] ) ? sanitize_url( wp_unslash( $_REQUEST['url'] ) ) : null;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$format = isset( $_REQUEST['format'] ) ? sanitize_key( wp_unslash( $_REQUEST['format'] ) ) : null;
 
 		if ( ! empty( $format ) && 'json' !== $format ) {
 			header( 'HTTP/1.0 501 Not implemented' );
